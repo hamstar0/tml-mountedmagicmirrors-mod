@@ -4,7 +4,6 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using Terraria;
-using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors {

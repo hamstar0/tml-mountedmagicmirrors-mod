@@ -78,7 +78,9 @@ namespace MountedMagicMirrors.Tiles {
 			Main.LocalPlayer.showItemIcon2 = this.mod.ItemType<MountableMagicMirrorTileItem>();
 
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
-			myplayer.AddDiscoveredMirror( i, j );
+			if( myplayer.AddDiscoveredMirror( i, j ) ) {
+				Main.NewText( "Mirror located! i:"+i+",j:"+j, Color.Lime );
+			}
 		}
 
 

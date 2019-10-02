@@ -71,7 +71,7 @@ namespace MountedMagicMirrors {
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 
 			foreach( (int tileX, int tileY) in myplayer.GetDiscoveredMirrors() ) {
-				this.DrawMirrorOnFullscreenMap( tileY, tileY );
+				this.DrawMirrorOnFullscreenMap( tileX, tileY );
 			}
 		}
 
@@ -79,16 +79,18 @@ namespace MountedMagicMirrors {
 		public void DrawMirrorOnFullscreenMap( int tileX, int tileY ) {
 			Texture2D tex = this.MirrorTex;
 			float scale = Main.mapFullscreenScale;//( isZoomed ? Main.mapFullscreenScale : 1f ) * scale;
-			float myScale = 1f;
 
-			int wldX = (tileX << 4) - (int)((float)tex.Width * 8f * myScale);
-			int wldY = (tileY << 4) - (int)((float)tex.Height * 8f * myScale);
-			int wid = (int)( (float)tex.Width / myScale );
-			int hei = (int)( (float)tex.Height / myScale );
+			int wldX = (tileX * 16) - (int)((float)tex.Width * 8f);
+			int wldY = (tileY * 16) - (int)((float)tex.Height * 8f);
+			int wid = (int)( (float)tex.Width );
+			int hei = (int)( (float)tex.Height );
 
-			var mapRectOrigin = new Rectangle( wldX, wldY, wid, hei );
-			var overMapData = HUDMapHelpers.GetFullMapScreenPosition( mapRectOrigin );
+			var wldRect = new Rectangle( wldX, wldY, wid, hei );
+			var overMapData = HUDMapHelpers.GetFullMapScreenPosition( wldRect );
 
+//DebugHelpers.Print( "mapdraw", "tileX:"+tileX+", tileY:"+tileY+
+//	", plrpos: " + (int)Main.LocalPlayer.Center.X+":"+(int)Main.LocalPlayer.Center.Y+
+//	", wldRect:" + wldRect+", overMapData:" + overMapData.Item1, 20 );
 			if( overMapData.Item2 ) {
 				Main.spriteBatch.Draw(
 					tex,

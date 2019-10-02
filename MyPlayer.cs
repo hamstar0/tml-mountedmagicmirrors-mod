@@ -17,7 +17,7 @@ namespace MountedMagicMirrors {
 
 		////////////////
 
-		public IDictionary<int, ISet<int>> DiscoveredMirrors { get; } = new Dictionary<int, ISet<int>>();
+		public IDictionary<int, ISet<int>> DiscoveredMirrorTiles { get; } = new Dictionary<int, ISet<int>>();
 
 		////
 
@@ -29,7 +29,7 @@ namespace MountedMagicMirrors {
 
 		public override void Load( TagCompound tag ) {
 			lock( MMMPlayer.MyLock ) {
-				this.DiscoveredMirrors.Clear();
+				this.DiscoveredMirrorTiles.Clear();
 
 				if( !tag.ContainsKey( "discovery_count" ) ) {
 					return;
@@ -41,7 +41,7 @@ namespace MountedMagicMirrors {
 					int x = tag.GetInt( "discovery_x_" + i );
 					int y = tag.GetInt( "discovery_y_" + i );
 
-					this.DiscoveredMirrors.Set2D( x, y );
+					this.DiscoveredMirrorTiles.Set2D( x, y );
 				}
 			}
 		}
@@ -50,11 +50,11 @@ namespace MountedMagicMirrors {
 		public override TagCompound Save() {
 			lock( MMMPlayer.MyLock ) {
 				var tag = new TagCompound {
-					{ "discovery_count", this.DiscoveredMirrors.Count2D() }
+					{ "discovery_count", this.DiscoveredMirrorTiles.Count2D() }
 				};
 
 				int i = 0;
-				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrors ) {
+				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
 					foreach( int tileY in tileYs ) {
 						tag["discovery_x_" + i] = tileX;
 						tag["discovery_y_" + i] = tileY;
@@ -69,27 +69,27 @@ namespace MountedMagicMirrors {
 
 		////////////////
 
-		 private IList<(int tileX, int tileY)> _Removals = new List<(int, int)>();
+		private IList<(int tileX, int tileY)> _Removals = new List<(int, int)>();
 
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
 			lock( MMMPlayer.MyLock ) {
 				int mmmType = this.mod.TileType<MountedMagicMirrorTile>();
 
-				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrors ) {
+				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
 					foreach( int tileY in tileYs ) {
 						Tile tile = Main.tile[tileX, tileY];
+
 						if( TileHelpers.IsAir(tile) || tile.type != mmmType ) {
 							this._Removals.Add( (tileX, tileY) );
-							continue;
+						} else {
+							yield return (tileX, tileY);
 						}
-
-						yield return (tileX, tileY);
 					}
 				}
 
 				if( this._Removals.Count > 0 ) {
 					foreach( (int tileX, int tileY) in this._Removals ) {
-						this.DiscoveredMirrors.Remove2D( tileX, tileY );
+						this.DiscoveredMirrorTiles.Remove2D( tileX, tileY );
 					}
 					this._Removals.Clear();
 				}
@@ -97,29 +97,25 @@ namespace MountedMagicMirrors {
 		}
 
 
-		public void AddDiscoveredMirror( int tileX, int tileY ) {
-			lock( MMMPlayer.MyLock ) {
-				bool found = false;
+		public bool AddDiscoveredMirror( int tileX, int tileY ) {
+			this.GetDiscoveredMirrors();	// Removes old mirrors
 
+			lock( MMMPlayer.MyLock ) {
 				for( int i=-3; i<3; i++ ) {
 					for( int j=-3; j<3; j++ ) {
-						if( !this.DiscoveredMirrors.ContainsKey(tileX+i) ) {
+						if( !this.DiscoveredMirrorTiles.ContainsKey(tileX+i) ) {
 							continue;
 						}
-						if( !this.DiscoveredMirrors[tileX+i].Contains(tileY+j) ) {
+						if( !this.DiscoveredMirrorTiles[tileX+i].Contains(tileY+j) ) {
 							continue;
 						}
-						found = true;
-						break;
+						return false;
 					}
-					if( found ) { break; }
 				}
 
-				if( !found ) {
-					Main.NewText( "Mirror located!", Color.Lime );
-				} else {
-					this.DiscoveredMirrors.Set2D( tileX, tileY );
-				}
+				this.DiscoveredMirrorTiles.Set2D( tileX, tileY );
+
+				return true;
 			}
 		}
 	}

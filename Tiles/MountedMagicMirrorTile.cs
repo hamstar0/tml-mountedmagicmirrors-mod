@@ -21,7 +21,12 @@ namespace MountedMagicMirrors.Tiles {
 			ModTranslation name = this.CreateMapEntryName();
 			name.SetDefault( "Mounted Magic Mirror" );
 
-			this.AddMapEntry( new Color(120, 85, 60), name );
+			this.AddMapEntry( new Color(0, 255, 255), name, (string currTileName, int tileX, int tileY) => {
+				var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
+				myplayer.SetTargetMirror( tileX, tileY );
+				return currTileName;
+			} );
+
 			this.dustType = 7;
 			this.disableSmartCursor = true;
 		}
@@ -79,7 +84,7 @@ namespace MountedMagicMirrors.Tiles {
 
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 			if( myplayer.AddDiscoveredMirror( i, j ) ) {
-				Main.NewText( "Mirror located! i:"+i+",j:"+j, Color.Lime );
+				Main.NewText( "Mirror located!", Color.Lime );
 			}
 		}
 
@@ -88,6 +93,9 @@ namespace MountedMagicMirrors.Tiles {
 			Main.resetMapFull = true;
 			Main.mapEnabled = true;
 			Main.mapFullscreen = true;
+
+			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
+			myplayer.BeginFastTravelChoice();
 		}
 	}
 }

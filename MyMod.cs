@@ -54,9 +54,9 @@ namespace MountedMagicMirrors {
 		////
 
 		public override void AddRecipeGroups() {
-			string mmName = Language.GetTextValue("LegacyMisc.37")+" "+Lang.GetItemNameValue(ItemID.MagicMirror);
+			string grpDisplayName = Language.GetTextValue("LegacyMisc.37")+" "+Lang.GetItemNameValue(ItemID.MagicMirror);
 
-			var group = new RecipeGroup( () => mmName,
+			var group = new RecipeGroup( () => grpDisplayName,
 				(int)ItemID.MagicMirror, (int)ItemID.IceMirror
 			);
 
@@ -78,12 +78,13 @@ namespace MountedMagicMirrors {
 
 		public void DrawMirrorOnFullscreenMap( int tileX, int tileY ) {
 			Texture2D tex = this.MirrorTex;
-			float scale = Main.mapFullscreenScale;//( isZoomed ? Main.mapFullscreenScale : 1f ) * scale;
+			float myScale = 0.25f;
+			float uiScale = Main.mapFullscreenScale;//( isZoomed ? Main.mapFullscreenScale : 1f ) * scale;
 
-			int wldX = (tileX * 16) - (int)((float)tex.Width * 8f);
-			int wldY = (tileY * 16) - (int)((float)tex.Height * 8f);
-			int wid = (int)( (float)tex.Width );
-			int hei = (int)( (float)tex.Height );
+			int wldX = (tileX * 16) - (int)((float)tex.Width * 8f * myScale);
+			int wldY = (tileY * 16) - (int)((float)tex.Height * 8f * myScale);
+			int wid = (int)( (float)tex.Width * myScale );
+			int hei = (int)( (float)tex.Height * myScale );
 
 			var wldRect = new Rectangle( wldX, wldY, wid, hei );
 			var overMapData = HUDMapHelpers.GetFullMapScreenPosition( wldRect );
@@ -99,7 +100,7 @@ namespace MountedMagicMirrors {
 					Color.White,
 					0f,
 					default(Vector2),
-					scale,
+					uiScale * myScale,
 					SpriteEffects.None,
 					1f
 				);

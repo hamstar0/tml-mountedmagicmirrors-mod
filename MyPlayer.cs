@@ -4,13 +4,11 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using Terraria;
-using Microsoft.Xna.Framework;
-using HamstarHelpers.Helpers.Tiles;
 using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors {
-	class MMMPlayer : ModPlayer {
+	partial class MMMPlayer : ModPlayer {
 		internal static readonly object MyLock = new object();
 
 
@@ -18,6 +16,10 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public IDictionary<int, ISet<int>> DiscoveredMirrorTiles { get; } = new Dictionary<int, ISet<int>>();
+
+		public bool IsMirrorPicking { get; private set; } = false;
+
+		public (int TileX, int TileY) TargetMirror = (0, 0);
 
 		////
 
@@ -69,54 +71,34 @@ namespace MountedMagicMirrors {
 
 		////////////////
 
-		private IList<(int tileX, int tileY)> _Removals = new List<(int, int)>();
-
-		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
-			lock( MMMPlayer.MyLock ) {
-				int mmmType = this.mod.TileType<MountedMagicMirrorTile>();
-
-				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
-					foreach( int tileY in tileYs ) {
-						Tile tile = Main.tile[tileX, tileY];
-
-						if( TileHelpers.IsAir(tile) || tile.type != mmmType ) {
-							this._Removals.Add( (tileX, tileY) );
-						} else {
-							yield return (tileX, tileY);
-						}
-					}
+		public override void PreUpdate() {
+			if( this.player.whoAmI == Main.myPlayer ) {
+				if( this.IsMirrorPicking ) {
+					this.UpdateFastTravelPicking();
 				}
+			}
+		}
 
-				if( this._Removals.Count > 0 ) {
-					foreach( (int tileX, int tileY) in this._Removals ) {
-						this.DiscoveredMirrorTiles.Remove2D( tileX, tileY );
-					}
-					this._Removals.Clear();
+		////
+
+		private void UpdateFastTravelPicking() {
+			if( !Main.mapFullscreen ) {
+				this.IsMirrorPicking = false;
+				return;
+			}
+
+			if( Main.mouseLeft && Main.mouseLeftRelease ) {
+				if( this.TeleportToMirror(this.TargetMirror.TileX, this.TargetMirror.TileY) ) {
+					this.IsMirrorPicking = false;
 				}
 			}
 		}
 
 
-		public bool AddDiscoveredMirror( int tileX, int tileY ) {
-			this.GetDiscoveredMirrors();	// Removes old mirrors
+		////////////////
 
-			lock( MMMPlayer.MyLock ) {
-				for( int i=-3; i<3; i++ ) {
-					for( int j=-3; j<3; j++ ) {
-						if( !this.DiscoveredMirrorTiles.ContainsKey(tileX+i) ) {
-							continue;
-						}
-						if( !this.DiscoveredMirrorTiles[tileX+i].Contains(tileY+j) ) {
-							continue;
-						}
-						return false;
-					}
-				}
-
-				this.DiscoveredMirrorTiles.Set2D( tileX, tileY );
-
-				return true;
-			}
+		public void BeginFastTravelChoice() {
+			this.IsMirrorPicking = true;
 		}
 	}
 }

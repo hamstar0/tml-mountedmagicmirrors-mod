@@ -1,0 +1,3 @@
+displayName = Mounted Magic Mirrors
+author = hamstar
+version = 0.1

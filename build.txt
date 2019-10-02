@@ -1,3 +1,5 @@
 displayName = Mounted Magic Mirrors
 author = hamstar
-version = 0.1
+version = 0.1.0
+buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
+homepage = https://github.com/hamstar0/tml-powerfulmagic-mod

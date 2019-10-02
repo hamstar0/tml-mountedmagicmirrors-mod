@@ -54,9 +54,14 @@ namespace MountedMagicMirrors.Items {
 			this.AddTile( TileID.TinkerersWorkbench );
 
 			this.AddRecipeGroup( mymod.MagicMirrorsRecipeGroupName, 1 );
-			this.AddIngredient( ItemID.Teleporter, 1 );
 			this.AddIngredient( ItemID.Wire, 50 );
-			this.AddIngredient( ItemID.SoulofFlight, 10 );
+
+			if( mymod.Config.EnableMountedMagicMirrorEasyModeRecipe ) {
+				this.AddIngredient( ItemID.LargeRuby, 1 );
+			} else {
+				this.AddIngredient( ItemID.Teleporter, 1 );
+				this.AddIngredient( ItemID.SoulofFlight, 10 );
+			}
 
 			this.SetResult( myMirror );
 		}

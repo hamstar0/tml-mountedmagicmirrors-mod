@@ -17,6 +17,9 @@ namespace MountedMagicMirrors {
 		[Header( "\n " )]
 		[DefaultValue( true )]
 		public bool EnableMountedMagicMirrorRecipe { get; set; } = true;
+		[DefaultValue( false )]
+		[ReloadRequired]
+		public bool EnableMountedMagicMirrorEasyModeRecipe { get; set; } = false;
 
 		[DefaultValue( true )]
 		public bool IsMountedMagicMirrorBreakable { get; set; } = true;

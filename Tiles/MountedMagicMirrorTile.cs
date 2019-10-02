@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.Helpers.TModLoader;
+using Microsoft.Xna.Framework;
 using MountedMagicMirrors.Items;
 using Terraria;
 using Terraria.ModLoader;
@@ -75,11 +76,16 @@ namespace MountedMagicMirrors.Tiles {
 		public override void MouseOver( int i, int j ) {
 			Main.LocalPlayer.showItemIcon = true;
 			Main.LocalPlayer.showItemIcon2 = this.mod.ItemType<MountableMagicMirrorTileItem>();
+
+			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
+			myplayer.AddDiscoveredMirror( i, j );
 		}
 
 
 		public override void RightClick( int i, int j ) {
-Main.NewText( "!" );
+			Main.resetMapFull = true;
+			Main.mapEnabled = true;
+			Main.mapFullscreen = true;
 		}
 	}
 }

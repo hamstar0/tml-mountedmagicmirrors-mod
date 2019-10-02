@@ -4,7 +4,7 @@ using Terraria.ModLoader.Config;
 
 
 namespace MountedMagicMirrors {
-	public class MountedMagicMirrorsConfig : ModConfig {
+	public class MMMConfig : ModConfig {
 		public override ConfigScope Mode => ConfigScope.ServerSide;
 
 

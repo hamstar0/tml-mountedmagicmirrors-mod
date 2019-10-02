@@ -7,6 +7,7 @@ using HamstarHelpers.Helpers.Tiles;
 using MountedMagicMirrors.Tiles;
 using HamstarHelpers.Helpers.Players;
 using Microsoft.Xna.Framework;
+using HamstarHelpers.Classes.Tiles.TilePattern;
 
 
 namespace MountedMagicMirrors {
@@ -44,7 +45,19 @@ namespace MountedMagicMirrors {
 
 
 		public bool AddDiscoveredMirror( int tileX, int tileY ) {
-			this.GetDiscoveredMirrors();	// Removes old mirrors
+			this.GetDiscoveredMirrors();    // Removes old mirrors
+
+			var pattern = new TilePattern( new TilePatternBuilder {
+				IsAnyOfType = new HashSet<int> { this.mod.TileType<MountedMagicMirrorTile>() }
+			} );
+
+			(int TileX, int TileY)? tileAt = TileFinderHelpers.FindTopLeft( pattern, tileX, tileY, 3, 3 );
+			if( tileAt == null ) {
+				return false;
+			}
+
+			tileX = tileAt.Value.TileX;
+			tileY = tileAt.Value.TileY;
 
 			lock( MMMPlayer.MyLock ) {
 				for( int i=-3; i<3; i++ ) {
@@ -60,7 +73,6 @@ namespace MountedMagicMirrors {
 				}
 
 				this.DiscoveredMirrorTiles.Set2D( tileX, tileY );
-
 				return true;
 			}
 		}
@@ -71,40 +83,18 @@ namespace MountedMagicMirrors {
 		public bool SetTargetMirror( int tileX, int tileY ) {
 			int mmmTileType = this.mod.TileType<MountedMagicMirrorTile>();
 
-			Tile tile = Main.tile[tileX, tileY];
-			if( tile == null || TileHelpers.IsAir( tile ) || tile.type != mmmTileType ) {
-				return false;
-			}
+			var pattern = new TilePattern( new TilePatternBuilder {
+				IsAnyOfType = new HashSet<int> { mmmTileType }
+			} );
+			(int, int)? tileAt = TileFinderHelpers.FindTopLeft( pattern, tileX, tileY, 3, 3 );
 
-			int i, j = 0;
-
-			// Find the exact tile
-			for( i = 0; i < 3; i++ ) {
-				for( j = 0; j < 3; j++ ) {
-					tile = Framing.GetTileSafely( tileX - i, tileY - j );
-					if( tile.type != mmmTileType ) {
-						break;
-					}
-				}
-				j--;
-
-				tile = Framing.GetTileSafely( tileX - i, tileY - j );
-				if( tile.type != mmmTileType ) {
-					break;
-				}
-			}
-			i--;
-
-			tile = Framing.GetTileSafely( tileX - i, tileY - j );
-			if( tile.type == mmmTileType ) {
-				this.TargetMirror = (tileX - i, tileY - j);
-				return true;
-			}
-
-			return false;
+			this.TargetMirror = tileAt ?? (0, 0);
+			return tileAt != null;
 		}
 
-		
+
+		////////////////
+
 		public bool TeleportToMirror( int tileX, int tileY ) {
 			int mmmTileType = this.mod.TileType<MountedMagicMirrorTile>();
 

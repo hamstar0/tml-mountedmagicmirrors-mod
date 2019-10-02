@@ -11,16 +11,22 @@ namespace MountedMagicMirrors {
 	partial class MountedMagicMirrorsMod : Mod {
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
+			if( !myplayer.IsMirrorPicking ) {
+				return;
+			}
 
 			foreach( (int tileX, int tileY) in myplayer.GetDiscoveredMirrors() ) {
-				this.DrawMirrorOnFullscreenMap( tileX, tileY );
+				bool isTarget = myplayer.TargetMirror.TileX == tileX &&
+								myplayer.TargetMirror.TileY == tileY;
+DebugHelpers.Print( "mapdraw", "target:"+myplayer.TargetMirror+", currX:"+tileX+", currY:"+tileY, 20 );
+				this.DrawMirrorOnFullscreenMap( tileX, tileY, isTarget );
 			}
 		}
 
 
-		public void DrawMirrorOnFullscreenMap( int tileX, int tileY ) {
+		public void DrawMirrorOnFullscreenMap( int tileX, int tileY, bool isTarget ) {
 			Texture2D tex = this.MirrorTex;
-			float myScale = 0.25f;
+			float myScale = isTarget ? 0.5f : 0.25f;
 			float uiScale = Main.mapFullscreenScale;//( isZoomed ? Main.mapFullscreenScale : 1f ) * scale;
 
 			int wldX = ( tileX * 16 ) - (int)( (float)tex.Width * 8f * myScale );

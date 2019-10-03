@@ -4,4 +4,4 @@ This mod lets you craft your Magic Mirrors into wall-mounted fast travel points.
 
 Credits: Darkpuppy - Mounted Mirror sprite tweak.
 
-https://forums.terraria.org/index.php?threads/powerful-magic-6x-magic-damage-1-6-mana-regen-heal-simple-mod.76709/
+https://forums.terraria.org/index.php?threads/mounted-magic-mirrors-fast-travel.83296/

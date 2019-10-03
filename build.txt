@@ -3,4 +3,4 @@ author = hamstar
 version = 1.0.0
 modReferences = HamstarHelpers@5.1.0
 buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
-homepage = https://github.com/hamstar0/tml-powerfulmagic-mod
+homepage = https://forums.terraria.org/index.php?threads/mounted-magic-mirrors-fast-travel.83296/

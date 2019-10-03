@@ -9,16 +9,25 @@ using Terraria.ModLoader;
 
 namespace MountedMagicMirrors {
 	partial class MountedMagicMirrorsMod : Mod {
+//private (int TileX, int TileY) LastMirror = (0,0);
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 			if( !myplayer.IsMirrorPicking ) {
 				return;
 			}
 
+//bool isNew =	myplayer.TargetMirror.HasValue &&
+//			(	myplayer.TargetMirror.Value.TileX != this.LastMirror.TileX ||
+//				myplayer.TargetMirror.Value.TileY != this.LastMirror.TileY );
 			foreach( (int tileX, int tileY) in myplayer.GetDiscoveredMirrors() ) {
-				bool isTarget = myplayer.TargetMirror.TileX == tileX &&
-								myplayer.TargetMirror.TileY == tileY;
-DebugHelpers.Print( "mapdraw", "target:"+myplayer.TargetMirror+", currX:"+tileX+", currY:"+tileY, 20 );
+				bool isTarget = myplayer.TargetMirror.HasValue &&
+								myplayer.TargetMirror.Value.TileX == tileX &&
+								myplayer.TargetMirror.Value.TileY == tileY;
+//if( myplayer.TargetMirror.HasValue && isNew ) {
+//this.LastMirror = myplayer.TargetMirror.Value;
+//Main.NewText( "is target? "+myplayer.TargetMirror+" vs "+tileX+","+tileY );
+//}
+				
 				this.DrawMirrorOnFullscreenMap( tileX, tileY, isTarget );
 			}
 		}

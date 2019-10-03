@@ -7,7 +7,6 @@ using HamstarHelpers.Helpers.Tiles;
 using MountedMagicMirrors.Tiles;
 using HamstarHelpers.Helpers.Players;
 using Microsoft.Xna.Framework;
-using HamstarHelpers.Classes.Tiles.TilePattern;
 
 
 namespace MountedMagicMirrors {
@@ -24,7 +23,7 @@ namespace MountedMagicMirrors {
 
 				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
 					foreach( int tileY in tileYs ) {
-						Tile tile = Main.tile[tileX, tileY];
+						Tile tile = Framing.GetTileSafely( tileX, tileY );
 
 						if( TileHelpers.IsAir(tile) || tile.type != mmmType ) {
 							this._Removals.Add( (tileX, tileY) );
@@ -45,19 +44,19 @@ namespace MountedMagicMirrors {
 
 
 		public bool AddDiscoveredMirror( int tileX, int tileY ) {
+			var mymod = (MountedMagicMirrorsMod)this.mod;
 			this.GetDiscoveredMirrors();    // Removes old mirrors
 
-			var pattern = new TilePattern( new TilePatternBuilder {
-				IsAnyOfType = new HashSet<int> { this.mod.TileType<MountedMagicMirrorTile>() }
-			} );
-
-			(int TileX, int TileY)? tileAt = TileFinderHelpers.FindTopLeft( pattern, tileX, tileY, 3, 3 );
-			if( tileAt == null ) {
+			(int TileX, int TileY) tileAt;
+			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern,
+				tileX, tileY, 3, out tileAt );
+			if( !foundTile ) {
+//Main.NewText("0 No mirror at "+tileX+","+tileY);
 				return false;
 			}
 
-			tileX = tileAt.Value.TileX;
-			tileY = tileAt.Value.TileY;
+			tileX = tileAt.TileX;
+			tileY = tileAt.TileY;
 
 			lock( MMMPlayer.MyLock ) {
 				for( int i=-3; i<3; i++ ) {
@@ -81,15 +80,23 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public bool SetTargetMirror( int tileX, int tileY ) {
-			int mmmTileType = this.mod.TileType<MountedMagicMirrorTile>();
+			var mymod = (MountedMagicMirrorsMod)this.mod;
 
-			var pattern = new TilePattern( new TilePatternBuilder {
-				IsAnyOfType = new HashSet<int> { mmmTileType }
-			} );
-			(int, int)? tileAt = TileFinderHelpers.FindTopLeft( pattern, tileX, tileY, 3, 3 );
+			(int, int) tileAt;
+			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare(
+				mymod.MMMTilePattern,
+				tileX, tileY, 3, out tileAt );
 
-			this.TargetMirror = tileAt ?? (0, 0);
-			return tileAt != null;
+			if( foundTile ) {
+				this.TargetMirror = tileAt;
+			} else {
+				this.TargetMirror = null;
+			}
+
+//if( !this.TargetMirror.HasValue ) {
+//	Main.NewText("1 No mirror at "+this.TargetMirror);
+//}
+			return this.TargetMirror != null;
 		}
 
 
@@ -97,13 +104,15 @@ namespace MountedMagicMirrors {
 
 		public bool TeleportToMirror( int tileX, int tileY ) {
 			int mmmTileType = this.mod.TileType<MountedMagicMirrorTile>();
+			tileX++;
 
-			Tile tile = Framing.GetTileSafely( tileX + 1, tileY + 1 );
+			Tile tile = Framing.GetTileSafely( tileX, tileY );
 			if( tile.type != mmmTileType ) {
+//Main.NewText("2 No mirror at "+(tileX)+","+(tileY));
 				return false;
 			}
 
-			var pos = new Vector2( (tileX << 4) + 16, (tileY << 4) + 16 );
+			var pos = new Vector2( (tileX << 4), (tileY << 4) );
 			PlayerWarpHelpers.Teleport( this.player, pos, PlayerWarpHelpers.MagicMirrorWarpStyle );
 
 			return true;

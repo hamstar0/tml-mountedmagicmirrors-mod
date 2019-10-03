@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using Terraria;
+using HamstarHelpers.Helpers.Tiles;
 
 
 namespace MountedMagicMirrors {
@@ -18,7 +19,7 @@ namespace MountedMagicMirrors {
 
 		public bool IsMirrorPicking { get; private set; } = false;
 
-		public (int TileX, int TileY) TargetMirror = (0, 0);
+		public (int TileX, int TileY)? TargetMirror = null;
 
 		////
 
@@ -29,6 +30,8 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public override void Load( TagCompound tag ) {
+			var mymod = (MountedMagicMirrorsMod)this.mod;
+
 			lock( MMMPlayer.MyLock ) {
 				this.DiscoveredMirrorTiles.Clear();
 
@@ -42,7 +45,11 @@ namespace MountedMagicMirrors {
 					int x = tag.GetInt( "discovery_x_" + i );
 					int y = tag.GetInt( "discovery_y_" + i );
 
-					this.DiscoveredMirrorTiles.Set2D( x, y );
+					(int TileX, int TileY) coords;
+					bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern, x, y, 3, out coords );
+					if( foundTile ) {
+						this.DiscoveredMirrorTiles.Set2D( coords.TileX, coords.TileY );
+					}
 				}
 			}
 		}
@@ -87,8 +94,13 @@ namespace MountedMagicMirrors {
 			}
 
 			if( Main.mouseLeft && Main.mouseLeftRelease ) {
-				if( this.TeleportToMirror(this.TargetMirror.TileX, this.TargetMirror.TileY) ) {
-					this.IsMirrorPicking = false;
+				if( this.TargetMirror.HasValue ) {
+					var targ = this.TargetMirror.Value;
+
+					if( this.TeleportToMirror( targ.TileX, targ.TileY ) ) {
+						this.IsMirrorPicking = false;
+						Main.mapFullscreen = false;
+					}
 				}
 			}
 		}

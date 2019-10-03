@@ -5,6 +5,7 @@ using Terraria.ModLoader.IO;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using Terraria;
 using HamstarHelpers.Helpers.Tiles;
+using HamstarHelpers.Helpers.Debug;
 
 
 namespace MountedMagicMirrors {
@@ -79,6 +80,12 @@ namespace MountedMagicMirrors {
 
 		public override void PreUpdate() {
 			if( this.player.whoAmI == Main.myPlayer ) {
+				var mymod = (MountedMagicMirrorsMod)this.mod;
+
+				if( mymod.Config.DebugModePosition ) {
+					DebugHelpers.Print( "WhereAmI", this.player.Center.ToString(), 20 );
+				}
+
 				if( this.IsMirrorPicking ) {
 					this.UpdateFastTravelPicking();
 				}

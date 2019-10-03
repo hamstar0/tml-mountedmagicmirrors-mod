@@ -12,10 +12,11 @@ namespace MountedMagicMirrors {
 
 		[Header( "Debug settings" )]
 		public bool DebugModeInfo { get; set; } = false;
+		public bool DebugModePosition { get; set; } = false;
 
 		////
 
-		[Header( "\n Mounted mirror settings" )]
+		[Header( "Mounted mirror settings" )]
 		[DefaultValue( true )]
 		public bool EnableMountedMagicMirrorRecipe { get; set; } = true;
 		[DefaultValue( false )]
@@ -31,24 +32,20 @@ namespace MountedMagicMirrors {
 
 		[Header( "World generation settings" )]
 		[DefaultValue( true )]
-		public bool GenerateMountedMirrorsForNewWorlds = true;
+		public bool GenerateMountedMirrorsForNewWorlds { get; set; } = true;
 
 		[DefaultValue( 64 )]
-		public int MinimumMirrorTileSpacing = 64;
+		public int MinimumMirrorTileSpacing { get; set; } = 64;
 
-		[DefaultValue( 4 )]
-		public int TinyWorldMirrors = 4;    // SmallWorldPortals / 2
-
-		[DefaultValue( 8 )]
-		public int SmallWorldMirrors = 8;  // 4200 x 1200 = 5040000
-
-		[DefaultValue( 14 )]
-		public int MediumWorldMirrors = 14; // 6400 x 1800 = 11520000
-
-		[DefaultValue( 20 )]
-		public int LargeWorldMirrors = 20;  // 8400 x 2400 = 20160000
-
-		[DefaultValue( 27 )]
-		public int HugeWorldMirrors = 27;
+		[DefaultValue( 6 )]
+		public int TinyWorldMirrors { get; set; } = 4;    // SmallWorldPortals / 2
+		[DefaultValue( 10 )]
+		public int SmallWorldMirrors { get; set; } = 8;  // 4200 x 1200 = 5040000
+		[DefaultValue( 16 )]
+		public int MediumWorldMirrors { get; set; } = 14; // 6400 x 1800 = 11520000
+		[DefaultValue( 24 )]
+		public int LargeWorldMirrors { get; set; } = 20;  // 8400 x 2400 = 20160000
+		[DefaultValue( 30 )]
+		public int HugeWorldMirrors { get; set; } = 27;
 	}
 }

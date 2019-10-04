@@ -18,6 +18,7 @@
   <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
+    <None Remove="icon.pdn" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="HamstarHelpers">

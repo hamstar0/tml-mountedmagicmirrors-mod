@@ -16,15 +16,34 @@ namespace MountedMagicMirrors {
 
 		////////////////
 
-		public IDictionary<int, ISet<int>> DiscoveredMirrorTiles { get; } = new Dictionary<int, ISet<int>>();
+		public IDictionary<int, ISet<int>> DiscoveredMirrorTiles { get; private set; }
+			= new Dictionary<int, ISet<int>>();
+
+		////
 
 		public bool IsMirrorPicking { get; private set; } = false;
+
+		public bool RightClickSafetyLock { get; private set; } = false;
 
 		public (int TileX, int TileY)? TargetMirror = null;
 
 		////
 
 		public override bool CloneNewInstances => false;
+
+
+
+		////////////////
+
+		public override void clientClone( ModPlayer clientClone ) {
+			var myclone = (MMMPlayer)clientClone;
+
+			lock( MMMPlayer.MyLock ) {
+				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
+					myclone.DiscoveredMirrorTiles[tileX] = new HashSet<int>( tileYs );
+				}
+			}
+		}
 
 
 
@@ -46,30 +65,31 @@ namespace MountedMagicMirrors {
 					int x = tag.GetInt( "discovery_x_" + i );
 					int y = tag.GetInt( "discovery_y_" + i );
 
-					(int TileX, int TileY) coords;
-					bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern, x, y, 3, out coords );
-					if( foundTile ) {
-						this.DiscoveredMirrorTiles.Set2D( coords.TileX, coords.TileY );
-					}
+					this.DiscoveredMirrorTiles.Set2D( x, y );
 				}
+
+				LogHelpers.Log( "Loaded "+count+" discovered mirrors for "+this.player.name+" ("+this.player.whoAmI+")" );
 			}
 		}
 
 
 		public override TagCompound Save() {
 			lock( MMMPlayer.MyLock ) {
+				int count = this.DiscoveredMirrorTiles.Count2D();
 				var tag = new TagCompound {
-					{ "discovery_count", this.DiscoveredMirrorTiles.Count2D() }
+					{ "discovery_count", count }
 				};
 
 				int i = 0;
 				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
 					foreach( int tileY in tileYs ) {
-						tag["discovery_x_" + i] = tileX;
-						tag["discovery_y_" + i] = tileY;
+						tag["discovery_x_" + i] = (int)tileX;
+						tag["discovery_y_" + i] = (int)tileY;
 						i++;
 					}
 				}
+
+				LogHelpers.Log( "Saved "+i+" of "+count+" discovered mirrors for "+this.player.name+" ("+this.player.whoAmI+")" );
 
 				return tag;
 			}
@@ -100,15 +120,19 @@ namespace MountedMagicMirrors {
 				return;
 			}
 
-			if( Main.mouseLeft && Main.mouseLeftRelease ) {
-				if( this.TargetMirror.HasValue ) {
-					var targ = this.TargetMirror.Value;
+			if( Main.mouseRight && Main.mouseRightRelease ) {
+				if( !this.RightClickSafetyLock ) {
+					if( this.TargetMirror.HasValue ) {
+						var targ = this.TargetMirror.Value;
 
-					if( this.TeleportToMirror( targ.TileX, targ.TileY ) ) {
-						this.IsMirrorPicking = false;
-						Main.mapFullscreen = false;
+						if( this.TeleportToMirror( targ.TileX, targ.TileY ) ) {
+							this.IsMirrorPicking = false;
+							Main.mapFullscreen = false;
+						}
 					}
 				}
+			} else {
+				this.RightClickSafetyLock = false;
 			}
 		}
 
@@ -117,6 +141,7 @@ namespace MountedMagicMirrors {
 
 		public void BeginFastTravelChoice() {
 			this.IsMirrorPicking = true;
+			this.RightClickSafetyLock = true;
 		}
 	}
 }

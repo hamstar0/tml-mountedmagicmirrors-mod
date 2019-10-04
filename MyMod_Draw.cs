@@ -3,6 +3,7 @@ using HamstarHelpers.Helpers.HUD;
 using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MountedMagicMirrors.Items;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -36,7 +37,12 @@ namespace MountedMagicMirrors {
 						Main.NewText( "is target? " + myplayer.TargetMirror + " vs " + tileX + "," + tileY );
 					}
 				}
-				
+
+				if( isTarget ) {
+					Main.LocalPlayer.showItemIcon = true;
+					Main.LocalPlayer.showItemIcon2 = this.ItemType<MountableMagicMirrorTileItem>();
+				}
+
 				this.DrawMirrorOnFullscreenMap( tileX, tileY, isTarget );
 			}
 		}

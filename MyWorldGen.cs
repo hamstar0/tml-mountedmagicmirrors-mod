@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Classes.Tiles.TilePattern;
-using HamstarHelpers.Helpers.World;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,8 @@ namespace MountedMagicMirrors {
 		private TilePattern MirrorSpacePattern;
 		private int NeededMirrors;
 
-		private IDictionary<int, ISet<int>> MirrorPositions = new Dictionary<int, ISet<int>>();
+		private IDictionary<int, ISet<int>> MirrorPositions
+			= new Dictionary<int, ISet<int>>();
 
 
 
@@ -118,7 +118,7 @@ namespace MountedMagicMirrors {
 
 		private void SpawnMirror( int centerTileX, int centerTileY ) {
 			var mymod = MountedMagicMirrorsMod.Instance;
-			ushort mmmTile = (ushort)mymod.TileType<MountedMagicMirrorTile>();
+			ushort mmmTile = (ushort)ModContent.TileType<MountedMagicMirrorTile>();
 
 			WorldGen.Place3x3Wall( centerTileX - 1, centerTileY - 1, mmmTile, 0 );
 

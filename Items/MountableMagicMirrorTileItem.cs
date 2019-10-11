@@ -32,7 +32,7 @@ namespace MountedMagicMirrors.Items {
 			this.item.useTime = 10;
 			this.item.useStyle = 1;
 			this.item.consumable = true;
-			this.item.createTile = this.mod.TileType<MountedMagicMirrorTile>();
+			this.item.createTile = ModContent.TileType<MountedMagicMirrorTile>();
 		}
 
 

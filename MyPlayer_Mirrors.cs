@@ -19,7 +19,7 @@ namespace MountedMagicMirrors {
 
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
 			lock( MMMPlayer.MyLock ) {
-				int mmmType = this.mod.TileType<MountedMagicMirrorTile>();
+				int mmmType = ModContent.TileType<MountedMagicMirrorTile>();
 
 				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
 					foreach( int tileY in tileYs ) {
@@ -108,7 +108,7 @@ namespace MountedMagicMirrors {
 
 		public bool TeleportToMirror( int tileX, int tileY ) {
 			var mymod = (MountedMagicMirrorsMod)this.mod;
-			int mmmTileType = this.mod.TileType<MountedMagicMirrorTile>();
+			int mmmTileType = ModContent.TileType<MountedMagicMirrorTile>();
 			tileX++;
 
 			Tile tile = Framing.GetTileSafely( tileX, tileY );

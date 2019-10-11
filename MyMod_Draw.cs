@@ -40,7 +40,7 @@ namespace MountedMagicMirrors {
 
 				if( isTarget ) {
 					Main.LocalPlayer.showItemIcon = true;
-					Main.LocalPlayer.showItemIcon2 = this.ItemType<MountableMagicMirrorTileItem>();
+					Main.LocalPlayer.showItemIcon2 = ModContent.ItemType<MountableMagicMirrorTileItem>();
 				}
 
 				this.DrawMirrorOnFullscreenMap( tileX, tileY, isTarget );

@@ -27,7 +27,7 @@ namespace MountedMagicMirrors {
 
 		public string MagicMirrorsRecipeGroupName { get; private set; }
 
-		public MMMConfig Config => this.GetConfig<MMMConfig>();
+		public MMMConfig Config => ModContent.GetInstance<MMMConfig>();
 
 
 		////////////////
@@ -44,7 +44,7 @@ namespace MountedMagicMirrors {
 
 		public override void Load() {
 			this.MMMTilePattern = new TilePattern( new TilePatternBuilder {
-				IsAnyOfType = new HashSet<int> { this.TileType<MountedMagicMirrorTile>() }
+				IsAnyOfType = new HashSet<int> { ModContent.TileType<MountedMagicMirrorTile>() }
 			} );
 		}
 

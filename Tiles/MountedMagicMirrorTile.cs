@@ -72,7 +72,7 @@ namespace MountedMagicMirrors.Tiles {
 				}
 			} else {
 				if( mymod.Config.MountedMagicMirrorDropsItem ) {
-					Item.NewItem( i * 16, j * 16, 64, 32, this.mod.ItemType<MountableMagicMirrorTileItem>() );
+					Item.NewItem( i * 16, j * 16, 64, 32, ModContent.ItemType<MountableMagicMirrorTileItem>() );
 				}
 			}
 		}
@@ -82,7 +82,7 @@ namespace MountedMagicMirrors.Tiles {
 
 		public override void MouseOver( int i, int j ) {
 			Main.LocalPlayer.showItemIcon = true;
-			Main.LocalPlayer.showItemIcon2 = this.mod.ItemType<MountableMagicMirrorTileItem>();
+			Main.LocalPlayer.showItemIcon2 = ModContent.ItemType<MountableMagicMirrorTileItem>();
 
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 			if( myplayer.AddDiscoveredMirror( i, j ) ) {
@@ -91,13 +91,15 @@ namespace MountedMagicMirrors.Tiles {
 		}
 
 
-		public override void RightClick( int i, int j ) {
+		public override bool NewRightClick( int i, int j ) {
 			Main.resetMapFull = true;
 			Main.mapEnabled = true;
 			Main.mapFullscreen = true;
 
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 			myplayer.BeginFastTravelChoice();
+
+			return true;
 		}
 	}
 }

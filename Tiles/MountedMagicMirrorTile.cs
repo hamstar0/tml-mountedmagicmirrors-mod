@@ -23,7 +23,7 @@ namespace MountedMagicMirrors.Tiles {
 
 			this.AddMapEntry( new Color(0, 255, 255), name, (string currTileName, int tileX, int tileY) => {
 				var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
-				if( myplayer.IsMirrorPicking ) {
+				if( myplayer.IsMapMirrorPicking ) {
 					myplayer.SetTargetMirror( tileX, tileY );
 				}
 				return currTileName;
@@ -97,7 +97,7 @@ namespace MountedMagicMirrors.Tiles {
 			Main.mapFullscreen = true;
 
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
-			myplayer.BeginFastTravelChoice();
+			myplayer.BeginMapMirrorPicking();
 
 			return true;
 		}

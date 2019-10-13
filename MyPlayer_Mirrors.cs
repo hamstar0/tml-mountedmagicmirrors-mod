@@ -7,6 +7,7 @@ using HamstarHelpers.Helpers.Tiles;
 using MountedMagicMirrors.Tiles;
 using HamstarHelpers.Helpers.Players;
 using Microsoft.Xna.Framework;
+using HamstarHelpers.Services.Timers;
 
 
 namespace MountedMagicMirrors {
@@ -90,6 +91,7 @@ namespace MountedMagicMirrors {
 				tileX, tileY, 3, out tileAt );
 
 			if( foundTile ) {
+				Timers.SetTimer( "MMMIsMapMirrorPickingNow", 2, () => false );
 				this.TargetMirror = tileAt;
 			} else {
 				this.TargetMirror = null;
@@ -100,6 +102,7 @@ namespace MountedMagicMirrors {
 					Main.NewText( "B - No mirror at " + this.TargetMirror );
 				}
 			}
+
 			return this.TargetMirror != null;
 		}
 

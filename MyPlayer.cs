@@ -4,8 +4,8 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using Terraria;
-using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Services.Timers;
 
 
 namespace MountedMagicMirrors {
@@ -21,9 +21,9 @@ namespace MountedMagicMirrors {
 
 		////
 
-		public bool IsMirrorPicking { get; private set; } = false;
+		public bool IsMapMirrorPicking { get; private set; } = false;
 
-		public bool RightClickSafetyLock { get; private set; } = false;
+		public bool ClickSafetyLock { get; private set; } = false;
 
 		public (int TileX, int TileY)? TargetMirror = null;
 
@@ -106,42 +106,48 @@ namespace MountedMagicMirrors {
 					DebugHelpers.Print( "WhereAmI", this.player.Center.ToString(), 20 );
 				}
 
-				if( this.IsMirrorPicking ) {
-					this.UpdateFastTravelPicking();
+				if( this.IsMapMirrorPicking ) {
+					this.UpdateMapMirrorPicking();
 				}
 			}
 		}
 
 		////
 
-		private void UpdateFastTravelPicking() {
+		private void UpdateMapMirrorPicking() {
 			if( !Main.mapFullscreen ) {
-				this.IsMirrorPicking = false;
+				this.IsMapMirrorPicking = false;
+				this.ClickSafetyLock = false;
 				return;
 			}
 
-			if( Main.mouseRight && Main.mouseRightRelease ) {
-				if( !this.RightClickSafetyLock ) {
-					if( this.TargetMirror.HasValue ) {
-						var targ = this.TargetMirror.Value;
+			bool isClick =	(Main.mouseRight && Main.mouseRightRelease) ||
+							(Main.mouseLeft && Main.mouseLeftRelease);
 
-						if( this.TeleportToMirror( targ.TileX, targ.TileY ) ) {
-							this.IsMirrorPicking = false;
+			if( isClick ) {
+				if( !this.ClickSafetyLock ) {
+					bool isPickingNow = Timers.GetTimerTickDuration( "MMMIsMapMirrorPickingNow" ) > 0;
+
+					if( isPickingNow && this.TargetMirror.HasValue ) {
+						(int TileX, int TileY) target = this.TargetMirror.Value;
+
+						if( this.TeleportToMirror( target.TileX, target.TileY ) ) {
+							this.IsMapMirrorPicking = false;
 							Main.mapFullscreen = false;
 						}
 					}
 				}
 			} else {
-				this.RightClickSafetyLock = false;
+				this.ClickSafetyLock = false;
 			}
 		}
 
 
 		////////////////
 
-		public void BeginFastTravelChoice() {
-			this.IsMirrorPicking = true;
-			this.RightClickSafetyLock = true;
+		public void BeginMapMirrorPicking() {
+			this.IsMapMirrorPicking = true;
+			this.ClickSafetyLock = true;
 		}
 	}
 }

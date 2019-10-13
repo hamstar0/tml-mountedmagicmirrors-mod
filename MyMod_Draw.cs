@@ -1,9 +1,9 @@
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.HUD;
 using HamstarHelpers.Helpers.TModLoader;
+using HamstarHelpers.Services.Timers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MountedMagicMirrors.Items;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -18,13 +18,18 @@ namespace MountedMagicMirrors {
 
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
-			if( !myplayer.IsMirrorPicking ) {
+			if( !myplayer.IsMapMirrorPicking ) {
 				return;
 			}
 
-			bool isNew = myplayer.TargetMirror.HasValue &&
-						(myplayer.TargetMirror.Value.TileX != this._LastMirror.TileX ||
+			bool isNowTargetting = Timers.GetTimerTickDuration( "MMMIsMapMirrorPickingNow" ) > 0;
+			bool isNew = false;
+
+			if( this.Config.DebugModeInfo ) {
+				isNew = myplayer.TargetMirror.HasValue &&
+						( myplayer.TargetMirror.Value.TileX != this._LastMirror.TileX ||
 						myplayer.TargetMirror.Value.TileY != this._LastMirror.TileY );
+			}
 
 			foreach( (int tileX, int tileY) in myplayer.GetDiscoveredMirrors() ) {
 				bool isTarget = myplayer.TargetMirror.HasValue &&
@@ -38,12 +43,7 @@ namespace MountedMagicMirrors {
 					}
 				}
 
-				if( isTarget ) {
-					Main.LocalPlayer.showItemIcon = true;
-					Main.LocalPlayer.showItemIcon2 = ModContent.ItemType<MountableMagicMirrorTileItem>();
-				}
-
-				this.DrawMirrorOnFullscreenMap( tileX, tileY, isTarget );
+				this.DrawMirrorOnFullscreenMap( tileX, tileY, isNowTargetting && isTarget );
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace MountedMagicMirrors {
 					tex,
 					overMapData.Item1,
 					null,
-					Color.White,
+					isTarget ? Color.Cyan : Color.White,
 					0f,
 					default( Vector2 ),
 					uiScale * myScale,

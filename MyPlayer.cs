@@ -116,8 +116,7 @@ namespace MountedMagicMirrors {
 
 		private void UpdateMapMirrorPicking() {
 			if( !Main.mapFullscreen ) {
-				this.IsMapMirrorPicking = false;
-				this.ClickSafetyLock = false;
+				this.EndMapMirrorPicking();
 				return;
 			}
 
@@ -132,13 +131,14 @@ namespace MountedMagicMirrors {
 						(int TileX, int TileY) target = this.TargetMirror.Value;
 
 						if( this.TeleportToMirror( target.TileX, target.TileY ) ) {
-							this.IsMapMirrorPicking = false;
-							Main.mapFullscreen = false;
+							this.EndMapMirrorPicking();
 						}
 					}
 				}
 			} else {
+				//if( (!Main.mouseLeft && !Main.mouseLeftRelease) && (!Main.mouseRight && !Main.mouseRightRelease) ) {
 				this.ClickSafetyLock = false;
+				//}
 			}
 		}
 
@@ -148,6 +148,12 @@ namespace MountedMagicMirrors {
 		public void BeginMapMirrorPicking() {
 			this.IsMapMirrorPicking = true;
 			this.ClickSafetyLock = true;
+		}
+
+		public void EndMapMirrorPicking() {
+			this.IsMapMirrorPicking = false;
+			this.ClickSafetyLock = false;
+			Main.mapFullscreen = false;
 		}
 	}
 }

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.DotNET.Extensions;
 using Terraria;
-using HamstarHelpers.Helpers.Tiles;
-using MountedMagicMirrors.Tiles;
-using HamstarHelpers.Helpers.Players;
 using Microsoft.Xna.Framework;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.DotNET.Extensions;
+using HamstarHelpers.Helpers.Tiles;
+using HamstarHelpers.Helpers.Players;
 using HamstarHelpers.Services.Timers;
+using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors {
 	partial class MMMPlayer : ModPlayer {
-		private IList<(int tileX, int tileY)> _Removals = new List<(int, int)>();
+		private readonly IList<(int TileX, int TileY)> _Removals = new List<(int, int)>();
 
 
 
@@ -46,14 +47,13 @@ namespace MountedMagicMirrors {
 
 		public bool AddDiscoveredMirror( int tileX, int tileY ) {
 			var mymod = (MountedMagicMirrorsMod)this.mod;
-			this.GetDiscoveredMirrors();    // Removes old mirrors
+			this.GetDiscoveredMirrors();    // Unremember non-existent mirrors
 
 			(int TileX, int TileY) tileAt;
-			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern,
-				tileX, tileY, 3, out tileAt );
+			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern, tileX, tileY, 3, out tileAt );
 			if( !foundTile ) {
 				if( mymod.Config.DebugModeInfo ) {
-					Main.NewText( "A - No mirror at " + tileX + "," + tileY );
+					LogHelpers.LogAndPrintOnce( "A - No mirror at " + tileX + "," + tileY );
 				}
 				return false;
 			}
@@ -75,6 +75,7 @@ namespace MountedMagicMirrors {
 				}
 
 				this.DiscoveredMirrorTiles.Set2D( tileX, tileY );
+
 				return true;
 			}
 		}

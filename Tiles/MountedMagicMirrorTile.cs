@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 
 namespace MountedMagicMirrors.Tiles {
-	class MountedMagicMirrorTile : ModTile {
+	public class MountedMagicMirrorTile : ModTile {
 		public override void SetDefaults() {
 			Main.tileFrameImportant[ this.Type ] = true;
 			Main.tileLavaDeath[ this.Type ] = true;

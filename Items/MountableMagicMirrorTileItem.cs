@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 
 namespace MountedMagicMirrors.Items {
-	class MountableMagicMirrorTileItem : ModItem {
+	public class MountableMagicMirrorTileItem : ModItem {
 		public const int Width = 30;
 		public const int Height = 30;
 

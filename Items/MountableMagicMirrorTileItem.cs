@@ -56,7 +56,7 @@ namespace MountedMagicMirrors.Items {
 			this.AddRecipeGroup( mymod.MagicMirrorsRecipeGroupName, 1 );
 			this.AddIngredient( ItemID.Wire, 50 );
 
-			if( mymod.Config.EnableMountedMagicMirrorEasyModeRecipe ) {
+			if( MountedMagicMirrorsMod.Config.EnableMountedMagicMirrorEasyModeRecipe ) {
 				this.AddIngredient( ItemID.LargeRuby, 1 );
 			} else {
 				this.AddIngredient( ItemID.Teleporter, 1 );
@@ -68,7 +68,7 @@ namespace MountedMagicMirrors.Items {
 
 
 		public override bool RecipeAvailable() {
-			return ( (MountedMagicMirrorsMod)this.mod ).Config.EnableMountedMagicMirrorRecipe;
+			return MountedMagicMirrorsMod.Config.EnableMountedMagicMirrorRecipe;
 		}
 	}
 }

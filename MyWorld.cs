@@ -10,8 +10,7 @@ using HamstarHelpers.Helpers.Debug;
 namespace MountedMagicMirrors {
 	class MMMWorld : ModWorld {
 		public override void ModifyWorldGenTasks( List<GenPass> tasks, ref float totalWeight ) {
-			var mymod = (MountedMagicMirrorsMod)this.mod;
-			if( !mymod.Config.GenerateMountedMirrorsForNewWorlds ) {
+			if( !MountedMagicMirrorsMod.Config.GenerateMountedMirrorsForNewWorlds ) {
 				return;
 			}
 
@@ -20,19 +19,19 @@ namespace MountedMagicMirrors {
 			switch( WorldHelpers.GetSize() ) {
 			default:
 			case WorldSize.SubSmall:
-				mirrors = mymod.Config.TinyWorldMirrors;
+				mirrors = MountedMagicMirrorsMod.Config.TinyWorldMirrors;
 				break;
 			case WorldSize.Small:
-				mirrors = mymod.Config.SmallWorldMirrors;
+				mirrors = MountedMagicMirrorsMod.Config.SmallWorldMirrors;
 				break;
 			case WorldSize.Medium:
-				mirrors = mymod.Config.MediumWorldMirrors;
+				mirrors = MountedMagicMirrorsMod.Config.MediumWorldMirrors;
 				break;
 			case WorldSize.Large:
-				mirrors = mymod.Config.LargeWorldMirrors;
+				mirrors = MountedMagicMirrorsMod.Config.LargeWorldMirrors;
 				break;
 			case WorldSize.SuperLarge:
-				mirrors = mymod.Config.HugeWorldMirrors;
+				mirrors = MountedMagicMirrorsMod.Config.HugeWorldMirrors;
 				break;
 			}
 

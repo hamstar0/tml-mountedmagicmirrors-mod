@@ -1,7 +1,9 @@
 ﻿using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using MountedMagicMirrors.Items;
+using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -42,17 +44,29 @@ namespace MountedMagicMirrors.Tiles {
 			b = 1f;
 		}
 
+
+		////////////////
+
+		public override bool CanPlace( int i, int j ) {
+			Tile tile = Framing.GetTileSafely( i, j );
+			return tile.wall != WallID.LihzahrdBrickUnsafe || NPC.downedGolemBoss;
+		}
+
+		public override void PlaceInWorld( int i, int j, Item item ) {
+			foreach( Action<int, int, Item> action in MountedMagicMirrorsMod.Instance.OnMirrorCreate ) {
+				action( i, j, item );
+			}
+		}
+
+
 		////////////////
 
 		public override bool CanKillTile( int i, int j, ref bool blockDamaged ) {
-			var mymod = (MountedMagicMirrorsMod)this.mod;
-			return mymod.Config.IsMountedMagicMirrorBreakable;
+			return MountedMagicMirrorsMod.Config.IsMountedMagicMirrorBreakable;
 		}
 
 		public override void KillTile( int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem ) {
-			var mymod = (MountedMagicMirrorsMod)this.mod;
-
-			if( !mymod.Config.IsMountedMagicMirrorBreakable ) {
+			if( !MountedMagicMirrorsMod.Config.IsMountedMagicMirrorBreakable ) {
 				fail = true;
 				effectOnly = false;
 				noItem = true;
@@ -60,9 +74,7 @@ namespace MountedMagicMirrors.Tiles {
 		}
 
 		public override void KillMultiTile( int i, int j, int frameX, int frameY ) {
-			var mymod = (MountedMagicMirrorsMod)this.mod;
-
-			if( !mymod.Config.IsMountedMagicMirrorBreakable ) {
+			if( !MountedMagicMirrorsMod.Config.IsMountedMagicMirrorBreakable ) {
 				for( int k=i; k<i+3; k++ ) {
 					for( int l=j; l<j+3; l++ ) {
 						if( Main.tile[k, l].wall <= 0 ) {
@@ -71,7 +83,7 @@ namespace MountedMagicMirrors.Tiles {
 					}
 				}
 			} else {
-				if( mymod.Config.MountedMagicMirrorDropsItem ) {
+				if( MountedMagicMirrorsMod.Config.MountedMagicMirrorDropsItem ) {
 					Item.NewItem( i * 16, j * 16, 64, 32, ModContent.ItemType<MountableMagicMirrorTileItem>() );
 				}
 			}

@@ -100,9 +100,7 @@ namespace MountedMagicMirrors {
 
 		public override void PreUpdate() {
 			if( this.player.whoAmI == Main.myPlayer ) {
-				var mymod = (MountedMagicMirrorsMod)this.mod;
-
-				if( mymod.Config.DebugModePosition ) {
+				if( MountedMagicMirrorsMod.Config.DebugModePosition ) {
 					DebugHelpers.Print( "WhereAmI", this.player.Center.ToString(), 20 );
 				}
 

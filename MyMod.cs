@@ -1,7 +1,9 @@
 using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.TModLoader.Mods;
 using Microsoft.Xna.Framework.Graphics;
 using MountedMagicMirrors.Tiles;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -13,8 +15,10 @@ namespace MountedMagicMirrors {
 	partial class MountedMagicMirrorsMod : Mod {
 		public static MountedMagicMirrorsMod Instance { get; private set; }
 
-		////////////////
+		public static MMMConfig Config => ModContent.GetInstance<MMMConfig>();
 
+
+		////////////////
 
 		public static string GithubUserName => "hamstar0";
 		public static string GithubProjectName => "tml-mountedmagicmirrors-mod";
@@ -27,7 +31,8 @@ namespace MountedMagicMirrors {
 
 		public string MagicMirrorsRecipeGroupName { get; private set; }
 
-		public MMMConfig Config => ModContent.GetInstance<MMMConfig>();
+		internal IList<Action<int, int, Item>> OnMirrorCreate = new List<Action<int, int, Item>>();
+
 
 
 		////////////////
@@ -70,6 +75,13 @@ namespace MountedMagicMirrors {
 
 			this.MagicMirrorsRecipeGroupName = this.GetType().Name + ":AnyMagicMirror";
 			RecipeGroup.RegisterGroup( this.MagicMirrorsRecipeGroupName, group );
+		}
+
+
+		////////////////
+
+		public override object Call( params object[] args ) {
+			return ModBoilerplateHelpers.HandleModCall( typeof(MountedMagicMirrorsAPI), args );
 		}
 	}
 }

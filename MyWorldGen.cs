@@ -15,8 +15,7 @@ namespace MountedMagicMirrors {
 		private TilePattern MirrorSpacePattern;
 		private int NeededMirrors;
 
-		private IDictionary<int, ISet<int>> MirrorPositions
-			= new Dictionary<int, ISet<int>>();
+		private IDictionary<int, ISet<int>> MirrorPositions = new Dictionary<int, ISet<int>>();
 
 
 
@@ -27,7 +26,7 @@ namespace MountedMagicMirrors {
 				AreaFromCenter = new Rectangle( -1, -1, 3, 3 ),
 				HasWall = true,
 				HasLava = false,
-				IsSolid = false,
+				HasSolidProperties = false,
 				IsPlatform = false,
 				IsActuated = false,
 			} );
@@ -94,7 +93,7 @@ namespace MountedMagicMirrors {
 
 
 		private bool HasNearbyMirrors( int tileX, int tileY ) {
-			int minTileDist = MountedMagicMirrorsMod.Instance.Config.MinimumMirrorTileSpacing;
+			int minTileDist = MountedMagicMirrorsMod.Config.MinimumMirrorTileSpacing;
 			int minTileDistSqt = minTileDist * minTileDist;
 
 			foreach( (int otherTileX, ISet<int> otherTileYs) in this.MirrorPositions ) {
@@ -121,6 +120,10 @@ namespace MountedMagicMirrors {
 			ushort mmmTile = (ushort)ModContent.TileType<MountedMagicMirrorTile>();
 
 			WorldGen.Place3x3Wall( centerTileX - 1, centerTileY - 1, mmmTile, 0 );
+			
+			foreach( Action<int, int, Item> action in mymod.OnMirrorCreate ) {
+				action( centerTileX - 1, centerTileY - 1, null );
+			}
 
 			LogHelpers.Log( "Placed mounted magic mirror ("+this.MirrorPositions.Count+" of "+this.NeededMirrors+")" +
 				" at " + centerTileX + "," + centerTileY +

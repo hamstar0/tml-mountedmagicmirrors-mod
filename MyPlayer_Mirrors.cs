@@ -52,7 +52,7 @@ namespace MountedMagicMirrors {
 			(int TileX, int TileY) tileAt;
 			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern, tileX, tileY, 3, out tileAt );
 			if( !foundTile ) {
-				if( mymod.Config.DebugModeInfo ) {
+				if( MountedMagicMirrorsMod.Config.DebugModeInfo ) {
 					LogHelpers.LogAndPrintOnce( "A - No mirror at " + tileX + "," + tileY );
 				}
 				return false;
@@ -92,13 +92,13 @@ namespace MountedMagicMirrors {
 				tileX, tileY, 3, out tileAt );
 
 			if( foundTile ) {
-				Timers.SetTimer( "MMMIsMapMirrorPickingNow", 2, () => false );
+				Timers.SetTimer( "MMMIsMapMirrorPickingNow", 2, true, () => false );
 				this.TargetMirror = tileAt;
 			} else {
 				this.TargetMirror = null;
 			}
 
-			if( mymod.Config.DebugModeInfo ) {
+			if( MountedMagicMirrorsMod.Config.DebugModeInfo ) {
 				if( !this.TargetMirror.HasValue ) {
 					Main.NewText( "B - No mirror at " + this.TargetMirror );
 				}
@@ -111,13 +111,12 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public bool TeleportToMirror( int tileX, int tileY ) {
-			var mymod = (MountedMagicMirrorsMod)this.mod;
 			int mmmTileType = ModContent.TileType<MountedMagicMirrorTile>();
 			tileX++;
 
 			Tile tile = Framing.GetTileSafely( tileX, tileY );
 			if( tile.type != mmmTileType ) {
-				if( mymod.Config.DebugModeInfo ) {
+				if( MountedMagicMirrorsMod.Config.DebugModeInfo ) {
 					Main.NewText( "C - No mirror at " + tileX + "," + tileY );
 				}
 				return false;

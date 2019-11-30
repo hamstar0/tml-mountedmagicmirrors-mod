@@ -50,7 +50,7 @@ namespace MountedMagicMirrors {
 
 		public void DrawMirrorOnFullscreenMap( int tileX, int tileY, bool isTarget ) {
 			Texture2D tex = this.MirrorTex;
-			float myScale = isTarget ? 0.5f : 0.25f;
+			float myScale = isTarget ? 0.25f : 0.125f;
 			float uiScale = Main.mapFullscreenScale;//( isZoomed ? Main.mapFullscreenScale : 1f ) * scale;
 
 			int wldX = ( tileX * 16 ) - (int)( (float)tex.Width * 8f * myScale );

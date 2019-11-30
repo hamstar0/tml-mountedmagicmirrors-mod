@@ -86,7 +86,7 @@ namespace MountedMagicMirrors {
 		public bool SetTargetMirror( int tileX, int tileY ) {
 			var mymod = (MountedMagicMirrorsMod)this.mod;
 
-			(int, int) tileAt;
+			(int TileX, int TileY) tileAt;
 			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare(
 				mymod.MMMTilePattern,
 				tileX, tileY, 3, out tileAt );
@@ -100,7 +100,7 @@ namespace MountedMagicMirrors {
 
 			if( MountedMagicMirrorsMod.Config.DebugModeInfo ) {
 				if( !this.TargetMirror.HasValue ) {
-					Main.NewText( "B - No mirror at " + this.TargetMirror );
+					Main.NewText( "Cannot target; undiscovered mirror at " + this.TargetMirror.Value );
 				}
 			}
 
@@ -117,7 +117,7 @@ namespace MountedMagicMirrors {
 			Tile tile = Framing.GetTileSafely( tileX, tileY );
 			if( tile.type != mmmTileType ) {
 				if( MountedMagicMirrorsMod.Config.DebugModeInfo ) {
-					Main.NewText( "C - No mirror at " + tileX + "," + tileY );
+					Main.NewText( "Cannot teleport - Invalid mirror tile at " + tileX + "," + tileY );
 				}
 				return false;
 			}

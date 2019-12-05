@@ -1,10 +1,17 @@
-﻿using System;
+﻿using HamstarHelpers.Services.Configs;
+using System;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
 
 namespace MountedMagicMirrors {
-	public class MMMConfig : ModConfig {
+	public class MMMConfig : StackableModConfig {
+		public static MMMConfig Instance => ModConfigStack.GetMergedConfigs<MMMConfig>();
+
+
+
+		////////////////
+
 		public override ConfigScope Mode => ConfigScope.ServerSide;
 
 
@@ -12,6 +19,7 @@ namespace MountedMagicMirrors {
 
 		[Header( "Debug settings" )]
 		public bool DebugModeInfo { get; set; } = false;
+		public bool DebugModeWorldGen { get; set; } = false;
 		public bool DebugModePosition { get; set; } = false;
 
 		////
@@ -44,19 +52,19 @@ namespace MountedMagicMirrors {
 		public int MinimumMirrorTileSpacing { get; set; } = 64;
 
 
-		[Range( 0, 10000 )]
+		[Range( 0, 1000 )]
 		[DefaultValue( 12 )]
 		public int TinyWorldMirrors { get; set; } = 6;    // SmallWorldPortals / 2
 
-		[Range( 0, 10000 )]
+		[Range( 0, 1000 )]
 		[DefaultValue( 24 )]
 		public int SmallWorldMirrors { get; set; } = 10;  // 4200 x 1200 = 5040000
 
-		[Range( 0, 10000 )]
+		[Range( 0, 1000 )]
 		[DefaultValue( 32 )]
 		public int MediumWorldMirrors { get; set; } = 16; // 6400 x 1800 = 11520000
 
-		[Range( 0, 10000 )]
+		[Range( 0, 1000 )]
 		[DefaultValue( 64 )]
 		public int LargeWorldMirrors { get; set; } = 24;  // 8400 x 2400 = 20160000
 

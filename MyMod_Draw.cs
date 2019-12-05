@@ -25,7 +25,7 @@ namespace MountedMagicMirrors {
 			bool isNowTargetting = Timers.GetTimerTickDuration( "MMMIsMapMirrorPickingNow" ) > 0;
 			bool isNew = false;
 
-			if( MountedMagicMirrorsMod.Config.DebugModeInfo ) {
+			if( MMMConfig.Instance.DebugModeInfo ) {
 				isNew = myplayer.TargetMirror.HasValue &&
 						( myplayer.TargetMirror.Value.TileX != this._LastMirror.TileX ||
 						myplayer.TargetMirror.Value.TileY != this._LastMirror.TileY );
@@ -36,7 +36,7 @@ namespace MountedMagicMirrors {
 								myplayer.TargetMirror.Value.TileX == tileX &&
 								myplayer.TargetMirror.Value.TileY == tileY;
 
-				if( MountedMagicMirrorsMod.Config.DebugModeInfo ) {
+				if( MMMConfig.Instance.DebugModeInfo ) {
 					if( myplayer.TargetMirror.HasValue && isNew ) {
 						this._LastMirror = myplayer.TargetMirror.Value;
 						Main.NewText( "is target? " + myplayer.TargetMirror + " vs " + tileX + "," + tileY );

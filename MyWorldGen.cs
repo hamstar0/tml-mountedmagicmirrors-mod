@@ -93,7 +93,7 @@ namespace MountedMagicMirrors {
 
 
 		private bool HasNearbyMirrors( int tileX, int tileY ) {
-			int minTileDist = MountedMagicMirrorsMod.Config.MinimumMirrorTileSpacing;
+			int minTileDist = MMMConfig.Instance.MinimumMirrorTileSpacing;
 			int minTileDistSqt = minTileDist * minTileDist;
 
 			foreach( (int otherTileX, ISet<int> otherTileYs) in this.MirrorPositions ) {
@@ -125,10 +125,12 @@ namespace MountedMagicMirrors {
 				action( centerTileX - 1, centerTileY - 1, null );
 			}
 
-			LogHelpers.Log( "Placed mounted magic mirror ("+this.MirrorPositions.Count+" of "+this.NeededMirrors+")" +
-				" at " + centerTileX + "," + centerTileY +
-				" (" + (centerTileX << 4) + "," + (centerTileY << 4) + ")"
-			);
+			if( MMMConfig.Instance.DebugModeWorldGen ) {
+				LogHelpers.Log( "Placed mounted magic mirror (" + this.MirrorPositions.Count + " of " + this.NeededMirrors + ")" +
+					" at " + centerTileX + "," + centerTileY +
+					" (" + ( centerTileX << 4 ) + "," + ( centerTileY << 4 ) + ")"
+				);
+			}
 		}
 	}
 }

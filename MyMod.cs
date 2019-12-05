@@ -15,8 +15,6 @@ namespace MountedMagicMirrors {
 	partial class MountedMagicMirrorsMod : Mod {
 		public static MountedMagicMirrorsMod Instance { get; private set; }
 
-		public static MMMConfig Config => ModContent.GetInstance<MMMConfig>();
-
 
 		////////////////
 

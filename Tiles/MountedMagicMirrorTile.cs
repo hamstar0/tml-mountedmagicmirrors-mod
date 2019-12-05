@@ -62,11 +62,11 @@ namespace MountedMagicMirrors.Tiles {
 		////////////////
 
 		public override bool CanKillTile( int i, int j, ref bool blockDamaged ) {
-			return MountedMagicMirrorsMod.Config.IsMountedMagicMirrorBreakable;
+			return MMMConfig.Instance.IsMountedMagicMirrorBreakable;
 		}
 
 		public override void KillTile( int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem ) {
-			if( !MountedMagicMirrorsMod.Config.IsMountedMagicMirrorBreakable ) {
+			if( !MMMConfig.Instance.IsMountedMagicMirrorBreakable ) {
 				fail = true;
 				effectOnly = false;
 				noItem = true;
@@ -74,7 +74,7 @@ namespace MountedMagicMirrors.Tiles {
 		}
 
 		public override void KillMultiTile( int i, int j, int frameX, int frameY ) {
-			if( !MountedMagicMirrorsMod.Config.IsMountedMagicMirrorBreakable ) {
+			if( !MMMConfig.Instance.IsMountedMagicMirrorBreakable ) {
 				for( int k=i; k<i+3; k++ ) {
 					for( int l=j; l<j+3; l++ ) {
 						if( Main.tile[k, l].wall <= 0 ) {
@@ -83,7 +83,7 @@ namespace MountedMagicMirrors.Tiles {
 					}
 				}
 			} else {
-				if( MountedMagicMirrorsMod.Config.MountedMagicMirrorDropsItem ) {
+				if( MMMConfig.Instance.MountedMagicMirrorDropsItem ) {
 					Item.NewItem( i * 16, j * 16, 64, 32, ModContent.ItemType<MountableMagicMirrorTileItem>() );
 				}
 			}

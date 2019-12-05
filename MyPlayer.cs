@@ -100,8 +100,8 @@ namespace MountedMagicMirrors {
 
 		public override void PreUpdate() {
 			if( this.player.whoAmI == Main.myPlayer ) {
-				if( MountedMagicMirrorsMod.Config.DebugModePosition ) {
-					DebugHelpers.Print( "WhereAmI", this.player.Center.ToString(), 20 );
+				if( MMMConfig.Instance.DebugModePosition ) {
+					DebugHelpers.Print( "WhereAmI", (this.player.Center/16).ToShortString()+" ("+this.player.Center.ToString()+")" );
 				}
 
 				if( this.IsMapMirrorPicking ) {

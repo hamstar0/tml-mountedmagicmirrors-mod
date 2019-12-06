@@ -53,10 +53,12 @@ namespace MountedMagicMirrors {
 			float myScale = isTarget ? 0.25f : 0.125f;
 			float uiScale = Main.mapFullscreenScale;//( isZoomed ? Main.mapFullscreenScale : 1f ) * scale;
 
-			int wldX = ( tileX * 16 ) - (int)( (float)tex.Width * 8f * myScale );
-			int wldY = ( tileY * 16 ) - (int)( (float)tex.Height * 8f * myScale );
-			int wid = (int)( (float)tex.Width * myScale );
-			int hei = (int)( (float)tex.Height * myScale );
+			int wldBaseX = ((tileX + 1) << 4) + 8;
+			int wldBaseY = ((tileY + 1) << 4) + 8;
+			int wldX = wldBaseX - (int)( (float)tex.Width * 8f * myScale );
+			int wldY = wldBaseY - (int)( (float)tex.Height * 8f * myScale );
+			int wid = (int)( (float)tex.Width * 16f * myScale );
+			int hei = (int)( (float)tex.Height * 16f * myScale );
 
 			var wldRect = new Rectangle( wldX, wldY, wid, hei );
 			var overMapData = HUDMapHelpers.GetFullMapScreenPosition( wldRect );
@@ -66,15 +68,15 @@ namespace MountedMagicMirrors {
 			//	", wldRect:" + wldRect+", overMapData:" + overMapData.Item1, 20 );
 			if( overMapData.Item2 ) {
 				Main.spriteBatch.Draw(
-					tex,
-					overMapData.Item1,
-					null,
-					isTarget ? Color.Cyan : Color.White,
-					0f,
-					default( Vector2 ),
-					uiScale * myScale,
-					SpriteEffects.None,
-					1f
+					texture: tex,
+					position: overMapData.Item1,
+					sourceRectangle: null,
+					color: isTarget ? Color.Cyan : Color.White,
+					rotation: 0f,
+					origin: default( Vector2 ),
+					scale: uiScale * myScale,
+					effects: SpriteEffects.None,
+					layerDepth: 1f
 				);
 			}
 		}

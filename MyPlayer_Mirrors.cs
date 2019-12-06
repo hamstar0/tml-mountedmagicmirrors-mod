@@ -21,13 +21,11 @@ namespace MountedMagicMirrors {
 
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
 			lock( MMMPlayer.MyLock ) {
-				int mmmType = ModContent.TileType<MountedMagicMirrorTile>();
-
 				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
 					foreach( int tileY in tileYs ) {
 						Tile tile = Framing.GetTileSafely( tileX, tileY );
 
-						if( TileHelpers.IsAir(tile) || tile.type != mmmType ) {
+						if( !MountedMagicMirrorsMod.Instance.MMMTilePattern.Check(tileX, tileY) ) {
 							this._Removals.Add( (tileX, tileY) );
 						} else {
 							yield return (tileX, tileY);
@@ -45,36 +43,25 @@ namespace MountedMagicMirrors {
 		}
 
 
-		public bool AddDiscoveredMirror( int tileX, int tileY ) {
+		public bool AddDiscoveredMirror( int mouseTileX, int mouseTileY ) {
 			var mymod = (MountedMagicMirrorsMod)this.mod;
 			this.GetDiscoveredMirrors();    // Unremember non-existent mirrors
 
-			(int TileX, int TileY) tileAt;
-			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern, tileX, tileY, 3, out tileAt );
+			(int TileX, int TileY) mirrorTile;
+			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern, mouseTileX, mouseTileY, 3, out mirrorTile );
 			if( !foundTile ) {
 				if( MMMConfig.Instance.DebugModeInfo ) {
-					LogHelpers.LogAndPrintOnce( "A - No mirror at " + tileX + "," + tileY );
+					LogHelpers.LogAndPrintOnce( "A - No mirror at " + mouseTileX + "," + mouseTileY );
 				}
 				return false;
 			}
 
-			tileX = tileAt.TileX;
-			tileY = tileAt.TileY;
+			if( this.DiscoveredMirrorTiles.Contains2D(mirrorTile.TileX, mirrorTile.TileY) ) {
+				return false;
+			}
 
 			lock( MMMPlayer.MyLock ) {
-				for( int i=-3; i<3; i++ ) {
-					for( int j=-3; j<3; j++ ) {
-						if( !this.DiscoveredMirrorTiles.ContainsKey(tileX+i) ) {
-							continue;
-						}
-						if( !this.DiscoveredMirrorTiles[tileX+i].Contains(tileY+j) ) {
-							continue;
-						}
-						return false;
-					}
-				}
-
-				this.DiscoveredMirrorTiles.Set2D( tileX, tileY );
+				this.DiscoveredMirrorTiles.Set2D( mirrorTile.TileX, mirrorTile.TileY );
 
 				return true;
 			}

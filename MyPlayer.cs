@@ -6,6 +6,7 @@ using HamstarHelpers.Helpers.DotNET.Extensions;
 using Terraria;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Services.Timers;
+using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors {

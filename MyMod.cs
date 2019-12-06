@@ -47,6 +47,7 @@ namespace MountedMagicMirrors {
 
 		public override void Load() {
 			this.MMMTilePattern = new TilePattern( new TilePatternBuilder {
+				IsActive = true,
 				IsAnyOfType = new HashSet<int> { ModContent.TileType<MountedMagicMirrorTile>() }
 			} );
 		}

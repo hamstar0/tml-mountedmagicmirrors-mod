@@ -51,8 +51,6 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public override void Load( TagCompound tag ) {
-			var mymod = (MountedMagicMirrorsMod)this.mod;
-
 			lock( MMMPlayer.MyLock ) {
 				this.DiscoveredMirrorTiles.Clear();
 

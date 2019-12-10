@@ -25,6 +25,7 @@ namespace MountedMagicMirrors.Items {
 			this.item.width = MountableMagicMirrorTileItem.Width;
 			this.item.height = MountableMagicMirrorTileItem.Height;
 			this.item.value = Item.buyPrice( 0, 10, 0, 0 );
+			this.item.rare = 4;
 			this.item.maxStack = 99;
 			this.item.useTurn = true;
 			this.item.autoReuse = true;

@@ -53,23 +53,23 @@ namespace MountedMagicMirrors {
 
 
 		[Range( 0, 1000 )]
-		[DefaultValue( 12 )]
-		public int TinyWorldMirrors { get; set; } = 6;    // SmallWorldPortals / 2
+		[DefaultValue( 16 )]
+		public int TinyWorldMirrors { get; set; } = 20;    // SmallWorldPortals / 2
 
 		[Range( 0, 1000 )]
-		[DefaultValue( 24 )]
-		public int SmallWorldMirrors { get; set; } = 10;  // 4200 x 1200 = 5040000
+		[DefaultValue( 28 )]
+		public int SmallWorldMirrors { get; set; } = 28;  // 4200 x 1200 = 5040000
 
 		[Range( 0, 1000 )]
-		[DefaultValue( 32 )]
-		public int MediumWorldMirrors { get; set; } = 16; // 6400 x 1800 = 11520000
+		[DefaultValue( 54 )]
+		public int MediumWorldMirrors { get; set; } = 54; // 6400 x 1800 = 11520000
 
 		[Range( 0, 1000 )]
-		[DefaultValue( 64 )]
-		public int LargeWorldMirrors { get; set; } = 24;  // 8400 x 2400 = 20160000
+		[DefaultValue( 108 )]
+		public int LargeWorldMirrors { get; set; } = 108;  // 8400 x 2400 = 20160000
 
 		[Range( 0, 10000 )]
-		[DefaultValue( 96 )]
-		public int HugeWorldMirrors { get; set; } = 30;
+		[DefaultValue( 160 )]
+		public int HugeWorldMirrors { get; set; } = 160;
 	}
 }

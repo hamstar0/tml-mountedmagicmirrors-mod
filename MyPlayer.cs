@@ -127,8 +127,10 @@ namespace MountedMagicMirrors {
 					if( isPickingNow && this.TargetMirror.HasValue ) {
 						(int TileX, int TileY) target = this.TargetMirror.Value;
 
-						if( this.TeleportToMirror( target.TileX, target.TileY ) ) {
-							this.EndMapMirrorPicking();
+						if( this.DiscoveredMirrorTiles.Contains2D(target.TileX, target.TileY) ) {
+							if( this.TeleportToMirror( target.TileX, target.TileY ) ) {
+								this.EndMapMirrorPicking();
+							}
 						}
 					}
 				}

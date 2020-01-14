@@ -104,6 +104,7 @@ namespace MountedMagicMirrors.Tiles {
 
 
 		public override bool NewRightClick( int i, int j ) {
+			Main.playerInventory = false;
 			Main.resetMapFull = true;
 			Main.mapEnabled = true;
 			Main.mapFullscreen = true;

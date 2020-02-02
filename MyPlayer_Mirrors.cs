@@ -21,7 +21,7 @@ namespace MountedMagicMirrors {
 
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
 			lock( MMMPlayer.MyLock ) {
-				foreach( (int tileX, ISet<int> tileYs) in this.DiscoveredMirrorTiles ) {
+				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles ) {
 					foreach( int tileY in tileYs ) {
 						Tile tile = Framing.GetTileSafely( tileX, tileY );
 
@@ -35,7 +35,7 @@ namespace MountedMagicMirrors {
 
 				if( this._Removals.Count > 0 ) {
 					foreach( (int tileX, int tileY) in this._Removals ) {
-						this.DiscoveredMirrorTiles.Remove2D( tileX, tileY );
+						this.CurrentWorldDiscoveredMirrorTiles.Remove2D( tileX, tileY );
 					}
 					this._Removals.Clear();
 				}
@@ -56,12 +56,12 @@ namespace MountedMagicMirrors {
 				return false;
 			}
 
-			if( this.DiscoveredMirrorTiles.Contains2D(mirrorTile.TileX, mirrorTile.TileY) ) {
+			if( this.CurrentWorldDiscoveredMirrorTiles.Contains2D(mirrorTile.TileX, mirrorTile.TileY) ) {
 				return false;
 			}
 
 			lock( MMMPlayer.MyLock ) {
-				this.DiscoveredMirrorTiles.Set2D( mirrorTile.TileX, mirrorTile.TileY );
+				this.CurrentWorldDiscoveredMirrorTiles.Set2D( mirrorTile.TileX, mirrorTile.TileY );
 
 				return true;
 			}

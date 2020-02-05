@@ -94,7 +94,6 @@ namespace MountedMagicMirrors {
 		}
 
 		private int LoadOld( TagCompound tag ) {
-			string worldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
 			int count = tag.GetInt( "discovery_count" );
 
 			this.DiscoveredMirrorTiles[ "_" ] = new DiscoveredMirrors();

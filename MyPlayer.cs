@@ -31,7 +31,9 @@ namespace MountedMagicMirrors {
 			get {
 				if( this._CurrentWorldDiscoveredMirrorTiles == null ) {
 					string worldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
-					if( !this.DiscoveredMirrorTiles.TryGetValue(worldUid, out this._CurrentWorldDiscoveredMirrorTiles) ) {
+
+					if(		!this.DiscoveredMirrorTiles.TryGetValue(worldUid, out this._CurrentWorldDiscoveredMirrorTiles)
+						 &&	!this.DiscoveredMirrorTiles.TryGetValue("_", out this._CurrentWorldDiscoveredMirrorTiles) ) {
 						this._CurrentWorldDiscoveredMirrorTiles = null;
 					}
 				}
@@ -79,8 +81,10 @@ namespace MountedMagicMirrors {
 
 				int count = 0;
 
-				if( !tag.ContainsKey("world_count") && tag.ContainsKey( "discovery_count" ) ) {
-					count = this.LoadOld( tag );
+				if( !tag.ContainsKey("world_count") ) {
+					if( tag.ContainsKey( "discovery_count" ) ) {
+						count = this.LoadOld( tag );
+					}
 				} else {
 					count = this.LoadNew( tag );
 				}
@@ -93,11 +97,13 @@ namespace MountedMagicMirrors {
 			string worldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
 			int count = tag.GetInt( "discovery_count" );
 
+			this.DiscoveredMirrorTiles[ "_" ] = new DiscoveredMirrors();
+
 			for( int i = 0; i < count; i++ ) {
 				int x = tag.GetInt( "discovery_x_" + i );
 				int y = tag.GetInt( "discovery_y_" + i );
 
-				this.DiscoveredMirrorTiles[worldUid].Set2D( x, y );
+				this.DiscoveredMirrorTiles["_"].Set2D( x, y );
 			}
 
 			return count;

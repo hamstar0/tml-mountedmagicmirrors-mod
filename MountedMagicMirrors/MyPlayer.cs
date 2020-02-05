@@ -117,6 +117,8 @@ namespace MountedMagicMirrors {
 				string worldUid = tag.GetString( "world_uid_"+i );
 				int mirrorCount = tag.GetInt( "discovery_count_for_"+i );
 
+				this.DiscoveredMirrorTiles[worldUid] = new DiscoveredMirrors();
+
 				for( int j=0; j<mirrorCount; j++ ) {
 					int tileX = tag.GetInt( "discovery_x_"+i+"_"+j );
 					int tileY = tag.GetInt( "discovery_y_"+i+"_"+j );

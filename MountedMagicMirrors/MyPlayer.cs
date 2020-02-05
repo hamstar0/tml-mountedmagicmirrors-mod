@@ -154,8 +154,8 @@ namespace MountedMagicMirrors {
 					int j = 0;
 					foreach( (int tileX, ISet<int> tileYs) in mirrors ) {
 						foreach( int tileY in tileYs ) {
-							tag["discovery_x_" + i + "_" + j] = (int)tileX;
-							tag["discovery_y_" + i + "_" + j] = (int)tileY;
+							tag["discovery_x_"+i+"_"+j] = (int)tileX;
+							tag["discovery_y_"+i+"_"+j] = (int)tileY;
 							j++;
 						}
 					}
@@ -165,6 +165,8 @@ namespace MountedMagicMirrors {
 						+" discovered mirrors of world "
 						+worldUid+" ("+i+") for "
 						+this.player.name+" ("+this.player.whoAmI+")" );
+
+					i++;
 				}
 
 				return tag;

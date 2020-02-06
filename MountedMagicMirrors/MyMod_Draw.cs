@@ -3,6 +3,7 @@ using HamstarHelpers.Helpers.HUD;
 using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -15,6 +16,7 @@ namespace MountedMagicMirrors {
 
 
 
+		////////////////
 
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
 			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
@@ -23,8 +25,16 @@ namespace MountedMagicMirrors {
 			}
 
 			int maxDistSqr = MountedMagicMirrorsMod.MaxTileClickDistance * MountedMagicMirrorsMod.MaxTileClickDistance;
+
+			int mouseX = Main.mouseX - (Main.screenWidth / 2);
+			mouseX = (int)((float)mouseX * Main.UIScale);
+			mouseX = (Main.screenWidth / 2) + mouseX;
+			int mouseY = Main.mouseY - (Main.screenHeight / 2);
+			mouseY = (int)((float)mouseY * Main.UIScale);
+			mouseY = (Main.screenHeight / 2) + mouseY;
+
 			(int x, int y) mouseTile;
-			Helpers.HUD.HUDMapHelpers.GetFullscreenMapTileOfScreenPosition( Main.mouseX, Main.mouseY, out mouseTile );
+			Helpers.HUD.HUDMapHelpers.GetFullscreenMapTileOfScreenPosition( mouseX, mouseY, out mouseTile );
 
 			int closestTileDistSqr = maxDistSqr;
 			(int x, int y) closestTilePos = (0, 0);
@@ -67,12 +77,16 @@ namespace MountedMagicMirrors {
 
 			int wldBaseX = ((tileX + 1) << 4) + 8;
 			int wldBaseY = ((tileY + 1) << 4) + 8;
-			var overMapData = HUDMapHelpers.GetFullMapScreenPosition( new Vector2(wldBaseX, wldBaseY) );
+			var wldPos = new Vector2(wldBaseX, wldBaseY);
+
+			Tuple<Vector2, bool> overMapData = HUDMapHelpers.GetFullMapScreenPosition( wldPos );
 
 			if( overMapData.Item2 ) {
+				Vector2 scrPos = overMapData.Item1;
+
 				Main.spriteBatch.Draw(
 					texture: tex,
-					position: overMapData.Item1,
+					position: scrPos,
 					sourceRectangle: null,
 					color: isTarget ? Color.Cyan : Color.White,
 					rotation: 0f,

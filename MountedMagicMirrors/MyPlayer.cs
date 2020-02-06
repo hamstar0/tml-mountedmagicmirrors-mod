@@ -47,7 +47,7 @@ namespace MountedMagicMirrors {
 
 		public bool ClickSafetyLock { get; private set; } = false;
 
-		public (int TileX, int TileY)? TargetMirror = null;
+		internal (int TileX, int TileY)? TargetMirror = null;
 
 		////
 
@@ -99,19 +99,22 @@ namespace MountedMagicMirrors {
 			this.DiscoveredMirrorTiles[ "_" ] = new DiscoveredMirrors();
 
 			for( int i = 0; i < count; i++ ) {
-				int x = tag.GetInt( "discovery_x_" + i );
-				int y = tag.GetInt( "discovery_y_" + i );
+				int tileX = tag.GetInt( "discovery_x_" + i );
+				int tileY = tag.GetInt( "discovery_y_" + i );
 
-				this.DiscoveredMirrorTiles["_"].Set2D( x, y );
+				this.DiscoveredMirrorTiles["_"].Set2D( tileX, tileY );
+				
+				if( MMMConfig.Instance.DebugModeInfo ) {
+					LogHelpers.Log( "(Old) Loaded mirror at " + tileX + ", " + tileY );
+				}
 			}
 
 			return count;
 		}
 
 		private int LoadNew( TagCompound tag ) {
-			string currWorldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
 			int worldCount = tag.GetInt( "world_count" );
-			int currMirrorCount = 0;
+			int totalMirrorCount = 0;
 
 			for( int i=0; i<worldCount; i++ ) {
 				string worldUid = tag.GetString( "world_uid_"+i );
@@ -124,14 +127,16 @@ namespace MountedMagicMirrors {
 					int tileY = tag.GetInt( "discovery_y_"+i+"_"+j );
 
 					this.DiscoveredMirrorTiles[worldUid].Set2D( tileX, tileY );
+
+					if( MMMConfig.Instance.DebugModeInfo ) {
+						LogHelpers.Log( "Loaded mirror at " + tileX + ", " + tileY );
+					}
 				}
 
-				if( worldUid.Equals(currWorldUid) ) {
-					currMirrorCount = mirrorCount;
-				}
+				totalMirrorCount += mirrorCount;
 			}
 
-			return currMirrorCount;
+			return totalMirrorCount;
 		}
 
 
@@ -145,10 +150,15 @@ namespace MountedMagicMirrors {
 
 				int i = 0;
 				foreach( string worldUid in this.DiscoveredMirrorTiles.Keys ) {
-					IDictionary<int, ISet<int>> mirrors = this.DiscoveredMirrorTiles[worldUid];
+					IDictionary<int, ISet<int>> mirrors = this.DiscoveredMirrorTiles[ worldUid ];
 					int count = mirrors.Count2D();
 
-					tag[ "world_uid_"+i ] = worldUid;
+					string myWorldUid = worldUid;
+					if( worldUid == "_" ) {
+						myWorldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
+					}
+
+					tag[ "world_uid_"+i ] = myWorldUid;
 					tag[ "discovery_count_for_"+i ] = count;
 
 					int j = 0;
@@ -163,7 +173,7 @@ namespace MountedMagicMirrors {
 					LogHelpers.Log( "Saved "
 						+j+" of "+count
 						+" discovered mirrors of world "
-						+worldUid+" ("+i+") for "
+						+myWorldUid+" ("+i+") for "
 						+this.player.name+" ("+this.player.whoAmI+")" );
 
 					i++;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria.ModLoader;
 using Terraria;
 using Microsoft.Xna.Framework;
@@ -7,7 +8,6 @@ using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.Players;
-using HamstarHelpers.Services.Timers;
 using MountedMagicMirrors.Tiles;
 
 
@@ -21,8 +21,8 @@ namespace MountedMagicMirrors {
 
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
 			lock( MMMPlayer.MyLock ) {
-				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles ) {
-					foreach( int tileY in tileYs ) {
+				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
+					foreach( int tileY in tileYs.ToArray() ) {
 						Tile tile = Framing.GetTileSafely( tileX, tileY );
 
 						if( !MountedMagicMirrorsMod.Instance.MMMTilePattern.Check(tileX, tileY) ) {
@@ -65,33 +65,6 @@ namespace MountedMagicMirrors {
 
 				return true;
 			}
-		}
-
-
-		////////////////
-
-		public bool SetTargetMirror( int tileX, int tileY ) {
-			var mymod = (MountedMagicMirrorsMod)this.mod;
-
-			(int TileX, int TileY) tileAt;
-			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare(
-				mymod.MMMTilePattern,
-				tileX, tileY, 3, out tileAt );
-
-			if( foundTile ) {
-				Timers.SetTimer( "MMMIsMapMirrorPickingNow", 2, true, () => false );
-				this.TargetMirror = tileAt;
-			} else {
-				this.TargetMirror = null;
-			}
-
-			if( MMMConfig.Instance.DebugModeInfo ) {
-				if( !this.TargetMirror.HasValue ) {
-					Main.NewText( "Cannot target; undiscovered mirror at " + this.TargetMirror.Value );
-				}
-			}
-
-			return this.TargetMirror != null;
 		}
 
 

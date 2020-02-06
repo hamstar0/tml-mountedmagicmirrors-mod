@@ -3,7 +3,6 @@ using Terraria.ModLoader;
 using Terraria;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
-using HamstarHelpers.Services.Timers;
 
 
 namespace MountedMagicMirrors {
@@ -33,9 +32,7 @@ namespace MountedMagicMirrors {
 
 			if( isClick ) {
 				if( !this.ClickSafetyLock ) {
-					bool isPickingNow = Timers.GetTimerTickDuration( "MMMIsMapMirrorPickingNow" ) > 0;
-
-					if( isPickingNow && this.TargetMirror.HasValue ) {
+					if( this.TargetMirror.HasValue ) {
 						(int TileX, int TileY) target = this.TargetMirror.Value;
 
 						if( this.CurrentWorldDiscoveredMirrorTiles.Contains2D(target.TileX, target.TileY) ) {

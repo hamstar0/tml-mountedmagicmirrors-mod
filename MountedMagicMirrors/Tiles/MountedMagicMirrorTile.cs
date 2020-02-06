@@ -23,13 +23,7 @@ namespace MountedMagicMirrors.Tiles {
 			ModTranslation name = this.CreateMapEntryName();
 			name.SetDefault( "Mounted Magic Mirror" );
 
-			this.AddMapEntry( new Color(0, 255, 255), name, (string currTileName, int tileX, int tileY) => {
-				var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
-				if( myplayer.IsMapMirrorPicking ) {
-					myplayer.SetTargetMirror( tileX, tileY );
-				}
-				return currTileName;
-			} );
+			this.AddMapEntry( new Color(0, 255, 255), name, (string currTileName, int tileX, int tileY) => currTileName );
 
 			this.dustType = 7;
 			this.disableSmartCursor = true;

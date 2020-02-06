@@ -11,16 +11,6 @@
     <Exec Command="&quot;$(tMLBuildServerPath)&quot; -build $(ProjectDir) -eac $(TargetPath) -define $(DefineConstants) -unsafe $(AllowUnsafeBlocks)" />
   </Target>
   <ItemGroup>
-    <Compile Remove="Image Sources\**" />
-    <EmbeddedResource Remove="Image Sources\**" />
-    <None Remove="Image Sources\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove=".gitattributes" />
-    <None Remove=".gitignore" />
-    <None Remove="icon.pdn" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="HamstarHelpers">
       <HintPath>..\..\..\Mod Helpers\v5 (tML11)\HamstarHelpers\bin\Release\net452\HamstarHelpers.dll</HintPath>
     </Reference>

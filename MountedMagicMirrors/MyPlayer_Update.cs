@@ -7,20 +7,6 @@ using HamstarHelpers.Helpers.DotNET.Extensions;
 
 namespace MountedMagicMirrors {
 	partial class MMMPlayer : ModPlayer {
-		public override void PreUpdate() {
-			if( this.player.whoAmI == Main.myPlayer ) {
-				if( MMMConfig.Instance.DebugModePosition ) {
-					DebugHelpers.Print( "WhereAmI", (this.player.Center/16).ToShortString()+" ("+this.player.Center.ToString()+")" );
-				}
-
-				if( this.IsMapMirrorPicking ) {
-					this.UpdateMapMirrorPicking();
-				}
-			}
-		}
-
-		////
-
 		private void UpdateMapMirrorPicking() {
 			if( !Main.mapFullscreen ) {
 				this.EndMapMirrorPicking();
@@ -35,7 +21,7 @@ namespace MountedMagicMirrors {
 					if( this.TargetMirror.HasValue ) {
 						(int TileX, int TileY) target = this.TargetMirror.Value;
 
-						if( this.CurrentWorldDiscoveredMirrorTiles.Contains2D(target.TileX, target.TileY) ) {
+						if( this.CurrentWorldDiscoveredMirrorTiles?.Contains2D(target.TileX, target.TileY) ?? false ) {
 							if( this.TeleportToMirror( target.TileX, target.TileY ) ) {
 								this.EndMapMirrorPicking();
 							}

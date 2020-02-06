@@ -6,6 +6,7 @@ using Terraria;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.World;
+using HamstarHelpers.Helpers.TModLoader;
 
 
 namespace MountedMagicMirrors {
@@ -188,6 +189,33 @@ namespace MountedMagicMirrors {
 
 		public override void PostSavePlayer() {
 			this._CurrentWorldDiscoveredMirrorTiles = null;
+		}
+
+
+		////////////////
+
+		public override void PreUpdate() {
+			if( this.player.whoAmI == Main.myPlayer ) {
+				this.PreUpdateLocal();
+			}
+		}
+
+		private void PreUpdateLocal() {
+			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {
+				if( LoadHelpers.IsWorldBeingPlayed() ) {
+					string currWorldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
+
+					this.DiscoveredMirrorTiles[currWorldUid] = new DiscoveredMirrors();
+				}
+			}
+
+			if( MMMConfig.Instance.DebugModePosition ) {
+				DebugHelpers.Print( "WhereAmI", ( this.player.Center / 16 ).ToShortString() + " (" + this.player.Center.ToString() + ")" );
+			}
+
+			if( this.IsMapMirrorPicking ) {
+				this.UpdateMapMirrorPicking();
+			}
 		}
 	}
 }

@@ -20,6 +20,10 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
+			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {
+				yield break;
+			}
+
 			lock( MMMPlayer.MyLock ) {
 				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
 					foreach( int tileY in tileYs.ToArray() ) {
@@ -56,7 +60,7 @@ namespace MountedMagicMirrors {
 				return false;
 			}
 
-			if( this.CurrentWorldDiscoveredMirrorTiles.Contains2D(mirrorTile.TileX, mirrorTile.TileY) ) {
+			if( this.CurrentWorldDiscoveredMirrorTiles?.Contains2D(mirrorTile.TileX, mirrorTile.TileY) ?? true ) {
 				return false;
 			}
 

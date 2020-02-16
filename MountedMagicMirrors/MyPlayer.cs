@@ -61,6 +61,8 @@ namespace MountedMagicMirrors {
 		public override void clientClone( ModPlayer clientClone ) {
 			var myclone = (MMMPlayer)clientClone;
 
+			myclone._CurrentWorldDiscoveredMirrorTiles = null;
+
 			lock( MMMPlayer.MyLock ) {
 				foreach( (string worldUid, DiscoveredMirrors mirrors) in this.DiscoveredMirrorTiles ) {
 					myclone.DiscoveredMirrorTiles[worldUid] = new DiscoveredMirrors();
@@ -72,6 +74,21 @@ namespace MountedMagicMirrors {
 			}
 		}
 
+
+		////////////////
+
+		/*public override void SyncPlayer( int toWho, int fromWho, bool newPlayer ) {
+			if( Main.netMode == 1 ) {
+				if( toWho == -1 && fromWho == -1 && newPlayer ) {
+					this.Logic.OnCurrentClientConnect();
+				}
+			}
+			if( Main.netMode == 2 ) {
+				if( toWho == -1 && fromWho == this.player.whoAmI ) {
+					this.Logic.OnServerConnect( Main.player[fromWho] );
+				}
+			}
+		}*/
 
 
 		////////////////
@@ -157,6 +174,9 @@ namespace MountedMagicMirrors {
 					string myWorldUid = worldUid;
 					if( worldUid == "_" ) {
 						myWorldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
+						if( MMMConfig.Instance.DebugModeInfo ) {
+							LogHelpers.Log( "Saving for world UID " + myWorldUid );
+						}
 					}
 
 					tag[ "world_uid_"+i ] = myWorldUid;

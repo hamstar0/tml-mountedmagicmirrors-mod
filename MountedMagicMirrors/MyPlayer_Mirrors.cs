@@ -9,6 +9,7 @@ using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.Players;
 using MountedMagicMirrors.Tiles;
+using MountedMagicMirrors.Helpers.World;
 
 
 namespace MountedMagicMirrors {
@@ -30,7 +31,9 @@ namespace MountedMagicMirrors {
 						Tile tile = Framing.GetTileSafely( tileX, tileY );
 
 						if( !MountedMagicMirrorsMod.Instance.MMMTilePattern.Check(tileX, tileY) ) {
-							this._Removals.Add( (tileX, tileY) );
+							if( Main.netMode != 1 || TileChunkHelpers.IsTileSynced(tileX, tileY) ) {
+								this._Removals.Add( (tileX, tileY) );
+							}
 						} else {
 							yield return (tileX, tileY);
 						}

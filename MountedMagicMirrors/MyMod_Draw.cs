@@ -1,13 +1,13 @@
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.HUD;
-using HamstarHelpers.Helpers.TModLoader;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.TModLoader;
+using HamstarHelpers.Helpers.HUD;
 
 
 namespace MountedMagicMirrors {

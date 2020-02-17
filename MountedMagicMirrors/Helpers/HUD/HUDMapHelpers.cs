@@ -18,7 +18,7 @@ namespace MountedMagicMirrors.Helpers.HUD {
 			scrOriginX += minX * mapScale;
 			float scrOriginY = (float)( Main.screenHeight / 2 ) - mapPosY;
 			scrOriginY += minX * mapScale;
-			
+
 			int tileX = (int)(((float)scrPosX - scrOriginX) / mapScale + minX);
 			int tileY = (int)(((float)scrPosY - scrOriginY) / mapScale + minY);
 

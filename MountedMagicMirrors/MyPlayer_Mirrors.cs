@@ -6,49 +6,58 @@ using Terraria;
 using Microsoft.Xna.Framework;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
-using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.Players;
+using HamstarHelpers.Helpers.TModLoader;
+using HamstarHelpers.Helpers.Tiles;
 using MountedMagicMirrors.Tiles;
-using MountedMagicMirrors.Helpers.World;
 
 
 namespace MountedMagicMirrors {
 	partial class MMMPlayer : ModPlayer {
-		private readonly IList<(int TileX, int TileY)> _Removals = new List<(int, int)>();
-
-
-
-		////////////////
-
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
 			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {
 				yield break;
 			}
 
-			lock( MMMPlayer.MyLock ) {
+			lock( MMMPlayer.MyCurrentMirrorsLock ) {
+				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
+					foreach( int tileY in tileYs.ToArray() ) {
+						yield return (tileX, tileY);
+					}
+				}
+			}
+		}
+
+		public void ClearInvalidMirrorDiscoveries() {
+			if( this.CurrentWorldDiscoveredMirrorTiles == null || !LoadHelpers.IsWorldBeingPlayed() ) {
+				return;
+			}
+
+			IList<(int x, int y)> removals = new List<(int, int)>();
+
+			lock( MMMPlayer.MyCurrentMirrorsLock ) {
 				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
 					foreach( int tileY in tileYs.ToArray() ) {
 						Tile tile = Framing.GetTileSafely( tileX, tileY );
 
 						if( !MountedMagicMirrorsMod.Instance.MMMTilePattern.Check(tileX, tileY) ) {
-							if( Main.netMode != 1 || TileChunkHelpers.IsTileSynced(tileX, tileY) ) {
-								this._Removals.Add( (tileX, tileY) );
+							if( Main.netMode != 1 || Helpers.World.TileChunkHelpers.IsTileSyncedForCurrentClient(tileX, tileY) ) {
+								removals.Add( (tileX, tileY) );
 							}
-						} else {
-							yield return (tileX, tileY);
 						}
 					}
 				}
 
-				if( this._Removals.Count > 0 ) {
-					foreach( (int tileX, int tileY) in this._Removals ) {
+				if( removals.Count > 0 ) {
+					foreach( (int tileX, int tileY) in removals ) {
 						this.CurrentWorldDiscoveredMirrorTiles.Remove2D( tileX, tileY );
 					}
-					this._Removals.Clear();
 				}
 			}
 		}
 
+
+		////
 
 		public bool AddDiscoveredMirror( int mouseTileX, int mouseTileY ) {
 			var mymod = (MountedMagicMirrorsMod)this.mod;
@@ -67,7 +76,7 @@ namespace MountedMagicMirrors {
 				return false;
 			}
 
-			lock( MMMPlayer.MyLock ) {
+			lock( MMMPlayer.MyCurrentMirrorsLock ) {
 				this.CurrentWorldDiscoveredMirrorTiles.Set2D( mirrorTile.TileX, mirrorTile.TileY );
 
 				return true;

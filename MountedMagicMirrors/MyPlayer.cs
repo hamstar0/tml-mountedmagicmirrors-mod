@@ -16,7 +16,7 @@ namespace MountedMagicMirrors {
 
 
 	partial class MMMPlayer : ModPlayer {
-		internal static readonly object MyLock = new object();
+		internal static readonly object MyCurrentMirrorsLock = new object();
 
 
 
@@ -63,7 +63,7 @@ namespace MountedMagicMirrors {
 
 			myclone._CurrentWorldDiscoveredMirrorTiles = null;
 
-			lock( MMMPlayer.MyLock ) {
+			lock( MMMPlayer.MyCurrentMirrorsLock ) {
 				foreach( (string worldUid, DiscoveredMirrors mirrors) in this.DiscoveredMirrorTiles ) {
 					myclone.DiscoveredMirrorTiles[worldUid] = new DiscoveredMirrors();
 
@@ -94,7 +94,7 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public override void Load( TagCompound tag ) {
-			lock( MMMPlayer.MyLock ) {
+			lock( MMMPlayer.MyCurrentMirrorsLock ) {
 				this.DiscoveredMirrorTiles.Clear();
 
 				int count = 0;
@@ -161,7 +161,7 @@ namespace MountedMagicMirrors {
 		////
 
 		public override TagCompound Save() {
-			lock( MMMPlayer.MyLock ) {
+			lock( MMMPlayer.MyCurrentMirrorsLock ) {
 				var tag = new TagCompound {
 					{ "world_count", this.DiscoveredMirrorTiles.Count }
 				};
@@ -228,6 +228,8 @@ namespace MountedMagicMirrors {
 					this.DiscoveredMirrorTiles[currWorldUid] = new DiscoveredMirrors();
 				}
 			}
+
+			this.ClearInvalidMirrorDiscoveries();
 
 			if( MMMConfig.Instance.DebugModePosition ) {
 				DebugHelpers.Print( "WhereAmI", ( this.player.Center / 16 ).ToShortString() + " (" + this.player.Center.ToString() + ")" );

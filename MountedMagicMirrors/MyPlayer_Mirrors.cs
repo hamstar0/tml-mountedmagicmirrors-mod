@@ -92,9 +92,9 @@ namespace MountedMagicMirrors {
 
 			Tile tile = Framing.GetTileSafely( tileX, tileY );
 			if( tile.type != mmmTileType ) {
-				bool isValid = Main.netMode != 1 || Helpers.World.TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY );
+				bool isInvalid = Main.netMode != 1 || Helpers.World.TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY );
 
-				if( !isValid ) {
+				if( isInvalid ) {
 					if( MMMConfig.Instance.DebugModeInfo ) {
 						Main.NewText( "Cannot teleport - Invalid mirror tile at " + tileX + "," + tileY );
 					}

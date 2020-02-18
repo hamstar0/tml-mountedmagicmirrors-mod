@@ -92,10 +92,14 @@ namespace MountedMagicMirrors {
 
 			Tile tile = Framing.GetTileSafely( tileX, tileY );
 			if( tile.type != mmmTileType ) {
-				if( MMMConfig.Instance.DebugModeInfo ) {
-					Main.NewText( "Cannot teleport - Invalid mirror tile at " + tileX + "," + tileY );
+				bool isValid = Main.netMode != 1 || Helpers.World.TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY );
+
+				if( !isValid ) {
+					if( MMMConfig.Instance.DebugModeInfo ) {
+						Main.NewText( "Cannot teleport - Invalid mirror tile at " + tileX + "," + tileY );
+					}
+					return false;
 				}
-				return false;
 			}
 
 			var pos = new Vector2( (tileX << 4), (tileY << 4) );

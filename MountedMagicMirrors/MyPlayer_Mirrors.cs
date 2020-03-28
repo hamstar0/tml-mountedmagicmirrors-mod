@@ -7,13 +7,28 @@ using Microsoft.Xna.Framework;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.Players;
-using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Helpers.Tiles;
 using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors {
 	partial class MMMPlayer : ModPlayer {
+		public static bool? IsMirrorTileInvalid( int tileX, int tileY ) {
+			if( Main.netMode == 1 ) {
+				if( !TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY ) ) {
+					if( TileHelpers.IsEqual( Main.tile[tileX, tileY], new Tile() ) ) {
+						return null;
+					}
+				}
+			}
+
+			return !MountedMagicMirrorsMod.Instance.MMMTilePattern.Check( tileX, tileY );
+		}
+
+
+
+		////////////////
+
 		public IEnumerable<(int tileX, int tileY)> GetDiscoveredMirrors() {
 			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {
 				yield break;
@@ -29,7 +44,7 @@ namespace MountedMagicMirrors {
 		}
 
 		public void ClearInvalidMirrorDiscoveries() {
-			if( this.CurrentWorldDiscoveredMirrorTiles == null || !LoadHelpers.IsWorldBeingPlayed() ) {
+			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {
 				return;
 			}
 
@@ -38,20 +53,14 @@ namespace MountedMagicMirrors {
 			lock( MMMPlayer.MyCurrentMirrorsLock ) {
 				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
 					foreach( int tileY in tileYs.ToArray() ) {
-						Tile tile = Framing.GetTileSafely( tileX, tileY );
-
-						if( !MountedMagicMirrorsMod.Instance.MMMTilePattern.Check(tileX, tileY) ) {
-							if( Main.netMode != 1 || Helpers.World.TileChunkHelpers.IsTileSyncedForCurrentClient(tileX, tileY) ) {
-								removals.Add( (tileX, tileY) );
-							}
+						if( MMMPlayer.IsMirrorTileInvalid(tileX, tileY) == true ) {
+							removals.Add( (tileX, tileY) );
 						}
 					}
 				}
 
-				if( removals.Count > 0 ) {
-					foreach( (int tileX, int tileY) in removals ) {
-						this.CurrentWorldDiscoveredMirrorTiles.Remove2D( tileX, tileY );
-					}
+				foreach( (int tileX, int tileY) in removals ) {
+					this.CurrentWorldDiscoveredMirrorTiles.Remove2D( tileX, tileY );
 				}
 			}
 		}
@@ -92,9 +101,9 @@ namespace MountedMagicMirrors {
 
 			Tile tile = Framing.GetTileSafely( tileX, tileY );
 			if( tile.type != mmmTileType ) {
-				bool isInvalid = Main.netMode != 1 || Helpers.World.TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY );
-
-				if( isInvalid ) {
+				//bool isInvalid = Main.netMode != 1 || TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY );
+				//if( isInvalid ) { }
+				if( MMMPlayer.IsMirrorTileInvalid(tileX, tileY) != false ) {
 					if( MMMConfig.Instance.DebugModeInfo ) {
 						Main.NewText( "Cannot teleport - Invalid mirror tile at " + tileX + "," + tileY );
 					}

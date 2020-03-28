@@ -34,7 +34,7 @@ namespace MountedMagicMirrors {
 			mouseY = (Main.screenHeight / 2) + mouseY;
 
 			(int x, int y) mouseTile;
-			Helpers.HUD.HUDMapHelpers.GetFullscreenMapTileOfScreenPosition( mouseX, mouseY, out mouseTile );
+			HUDMapHelpers.GetFullscreenMapTileOfScreenPosition( mouseX, mouseY, out mouseTile );
 
 			int closestTileDistSqr = maxDistSqr;
 			(int x, int y) closestTilePos = (0, 0);

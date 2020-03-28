@@ -224,7 +224,6 @@ namespace MountedMagicMirrors {
 			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {
 				if( LoadHelpers.IsWorldBeingPlayed() ) {
 					string currWorldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
-
 					this.DiscoveredMirrorTiles[currWorldUid] = new DiscoveredMirrors();
 				}
 			}

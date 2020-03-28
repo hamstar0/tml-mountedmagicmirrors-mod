@@ -80,8 +80,10 @@ namespace MountedMagicMirrors {
 			int randTileX, randTileY;
 
 			do {
-				randTileX = Main.rand.Next( 64, Main.maxTilesX - 64 );
-				randTileY = Main.rand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
+				WorldGen.genRand.Next();	// Desyncs this from Wormholes?
+				WorldGen.genRand.Next();
+				randTileX = WorldGen.genRand.Next( 64, Main.maxTilesX - 64 );
+				randTileY = WorldGen.genRand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
 
 				if( this.MirrorSpacePattern.Check( randTileX, randTileY ) ) {
 					break;

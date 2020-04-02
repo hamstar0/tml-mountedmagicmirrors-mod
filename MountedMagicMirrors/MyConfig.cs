@@ -40,6 +40,9 @@ namespace MountedMagicMirrors {
 		[DefaultValue( true )]
 		public bool MountedMagicMirrorDropsItem { get; set; } = true;
 
+		[DefaultValue( true )]
+		public bool RightClickToUndiscover { get; set; } = true;
+
 		////
 
 		[Header( "World generation settings" )]

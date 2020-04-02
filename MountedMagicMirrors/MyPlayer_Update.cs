@@ -13,17 +13,21 @@ namespace MountedMagicMirrors {
 				return;
 			}
 
-			bool isClick =	(Main.mouseRight && Main.mouseRightRelease) ||
-							(Main.mouseLeft && Main.mouseLeftRelease);
+			bool isLeftClick = Main.mouseLeft && Main.mouseLeftRelease;
+			bool isRightClick = Main.mouseRight && Main.mouseRightRelease;
 
-			if( isClick ) {
+			if( isLeftClick || isRightClick ) {
 				if( !this.ClickSafetyLock ) {
 					if( this.TargetMirror.HasValue ) {
 						(int TileX, int TileY) target = this.TargetMirror.Value;
 
 						if( this.CurrentWorldDiscoveredMirrorTiles?.Contains2D(target.TileX, target.TileY) ?? false ) {
-							if( this.TeleportToMirror( target.TileX, target.TileY ) ) {
-								this.EndMapMirrorPicking();
+							if ( isRightClick && MMMConfig.Instance.RightClickToUndiscover ) {
+								this.CurrentWorldDiscoveredMirrorTiles.Remove2D(target.TileX, target.TileY);
+							} else {
+								if( this.TeleportToMirror( target.TileX, target.TileY ) ) {
+									this.EndMapMirrorPicking();
+								}
 							}
 						}
 					}

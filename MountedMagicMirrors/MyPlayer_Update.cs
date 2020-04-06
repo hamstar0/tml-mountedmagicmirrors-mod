@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Terraria;
 using HamstarHelpers.Helpers.Debug;
@@ -23,6 +24,7 @@ namespace MountedMagicMirrors {
 
 						if( this.CurrentWorldDiscoveredMirrorTiles?.Contains2D(target.TileX, target.TileY) ?? false ) {
 							if ( isRightClick && MMMConfig.Instance.RightClickToUndiscover ) {
+								Main.NewText( "Mirror removed.", Color.Yellow );
 								this.CurrentWorldDiscoveredMirrorTiles.Remove2D(target.TileX, target.TileY);
 							} else {
 								if( this.TeleportToMirror( target.TileX, target.TileY ) ) {

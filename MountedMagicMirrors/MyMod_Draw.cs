@@ -79,6 +79,10 @@ namespace MountedMagicMirrors {
 			int wldBaseY = ((tileY + 1) << 4) + 8;
 			var wldPos = new Vector2(wldBaseX, wldBaseY);
 
+			//var overMapData = HUDMapHelpers.GetFullMapPositionAsScreenPosition( wldPos );
+			//
+			//if( overMapData.IsOnScreen ) {
+			//	Vector2 scrPos = overMapData.ScreenPosition;
 			Tuple<Vector2, bool> overMapData = HUDMapHelpers.GetFullMapScreenPosition( wldPos );
 
 			if( overMapData.Item2 ) {

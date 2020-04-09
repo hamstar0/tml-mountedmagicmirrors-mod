@@ -16,7 +16,12 @@ namespace MountedMagicMirrors {
 		public static bool? IsMirrorTileInvalid( int tileX, int tileY ) {
 			if( Main.netMode == 1 ) {
 				if( !TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY ) ) {
-					if( TileHelpers.IsEqual( Main.tile[tileX, tileY], new Tile() ) ) {
+					Tile tile = Main.tile[tileX, tileY];
+					if( tile == null ) {
+						return null;
+					}
+
+					if( TileHelpers.IsEqual( tile, new Tile() ) ) {
 						return null;
 					}
 				}

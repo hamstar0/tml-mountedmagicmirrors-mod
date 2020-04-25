@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Terraria.ModLoader;
 using Terraria;
+using Terraria.ModLoader;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.Players;

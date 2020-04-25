@@ -15,7 +15,10 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public void RegisterTileSectionTile( int tileX, int tileY ) {
-			this.TileSectionMapByTile.Set2D( tileX, tileY );
+			int sectionX = Netplay.GetSectionX( tileX );
+			int sectionY = Netplay.GetSectionY( tileY );
+
+			this.TileSectionMapByTile.Set2D( sectionX, sectionY );
 		}
 
 		////

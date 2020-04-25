@@ -8,7 +8,7 @@ using HamstarHelpers.Helpers.Debug;
 
 
 namespace MountedMagicMirrors {
-	class MMMWorld : ModWorld {
+	partial class MMMWorld : ModWorld {
 		public override void ModifyWorldGenTasks( List<GenPass> tasks, ref float totalWeight ) {
 			if( !MMMConfig.Instance.GenerateMountedMirrorsForNewWorlds ) {
 				return;
@@ -35,7 +35,7 @@ namespace MountedMagicMirrors {
 				break;
 			}
 
-			tasks.Add( new MountedMirrorsGenPass(mirrors) );
+			tasks.Add( new MountedMirrorsGenPass( mirrors ) );
 		}
 	}
 }

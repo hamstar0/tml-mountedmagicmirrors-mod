@@ -1,14 +1,16 @@
-using HamstarHelpers.Classes.Tiles.TilePattern;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.TModLoader.Mods;
-using Microsoft.Xna.Framework.Graphics;
-using MountedMagicMirrors.Tiles;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using HamstarHelpers.Classes.Tiles.TilePattern;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.TModLoader.Mods;
+using HamstarHelpers.Services.Network;
+using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors {
@@ -56,6 +58,17 @@ namespace MountedMagicMirrors {
 			if( Main.netMode != 2 && !Main.dedServ ) {
 				this.MirrorTex = this.GetTexture( "Items/MountableMagicMirrorTileItem" );
 			}
+
+			//
+
+			void onTileSectionPacketGet( int tileX, int tileY, int width, int height, BinaryReader data ) {
+				var myworld = ModContent.GetInstance<MMMWorld>();
+				myworld.RegisterTileSectionTile( tileX, tileY );
+			}
+
+			//
+
+			Client.SubscribeToTileSectionPackets( onTileSectionPacketGet );
 		}
 
 		public override void Unload() {

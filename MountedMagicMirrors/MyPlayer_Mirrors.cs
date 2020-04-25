@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Terraria;
-using Microsoft.Xna.Framework;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.Players;
@@ -15,16 +15,17 @@ namespace MountedMagicMirrors {
 	partial class MMMPlayer : ModPlayer {
 		public static bool? IsMirrorTileInvalid( int tileX, int tileY ) {
 			if( Main.netMode == 1 ) {
-				if( !TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY ) ) {
-					Tile tile = Main.tile[tileX, tileY];
-					if( tile == null ) {
-						return null;
-					}
-
-					if( TileHelpers.IsEqual( tile, new Tile() ) ) {
-						return null;
-					}
+				var myworld = ModContent.GetInstance<MMMWorld>();
+				if( !myworld.IsTileLoaded(tileX, tileY) ) {
+					return null;
 				}
+
+				/*if( !TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY ) ) {
+					Tile tile = Main.tile[tileX, tileY];
+					if( tile == null || TileHelpers.IsEqual(tile, new Tile()) ) {
+						return null;
+					}
+				}*/
 			}
 
 			return !MountedMagicMirrorsMod.Instance.MMMTilePattern.Check( tileX, tileY );

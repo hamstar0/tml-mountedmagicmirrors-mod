@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Terraria.ModLoader;
 using Terraria;
+using Terraria.ModLoader;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 

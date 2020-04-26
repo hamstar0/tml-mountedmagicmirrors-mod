@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Terraria;
 using Terraria.ModLoader;
 using HamstarHelpers.Helpers.Debug;
@@ -8,7 +9,7 @@ using HamstarHelpers.Helpers.DotNET.Extensions;
 
 namespace MountedMagicMirrors {
 	partial class MMMWorld : ModWorld {
-		private IDictionary<int, ISet<int>> TileSectionMapByTile = new Dictionary<int, ISet<int>>();
+		private IDictionary<int, ISet<int>> TileSectionMapByTile = new ConcurrentDictionary<int, ISet<int>>();
 
 
 
@@ -28,6 +29,13 @@ namespace MountedMagicMirrors {
 			int sectionY = Netplay.GetSectionY( tileY );
 
 			return this.TileSectionMapByTile.Contains2D( sectionX, sectionY );
+		}
+
+
+		////////////////
+
+		public void UnregisterTileSections() {
+			this.TileSectionMapByTile.Clear();
 		}
 	}
 }

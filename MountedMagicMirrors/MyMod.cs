@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.TModLoader.Mods;
+using HamstarHelpers.Services.Hooks.LoadHooks;
 using HamstarHelpers.Services.Network;
 using MountedMagicMirrors.Tiles;
 
@@ -69,6 +70,11 @@ namespace MountedMagicMirrors {
 			//
 
 			Client.SubscribeToTileSectionPackets( onTileSectionPacketGet );
+
+			LoadHooks.AddPostWorldUnloadEachHook( () => {
+				var myworld = ModContent.GetInstance<MMMWorld>();
+				myworld?.UnregisterTileSections();
+			} );
 		}
 
 		public override void Unload() {

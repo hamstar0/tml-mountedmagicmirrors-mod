@@ -1,17 +1,39 @@
-﻿using HamstarHelpers.Helpers.DotNET.Extensions;
-using HamstarHelpers.Classes.Tiles.TilePattern;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
-using MountedMagicMirrors.Tiles;
+using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.DotNET.Extensions;
+using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors {
 	class MountedMirrorsGenPass : GenPass {
+		public static (int minTileX, int maxTileX, int minTileY, int maxTileY) GetTileBoundsForWorld() {
+			int minTileX = 64;
+			int maxTileX = Main.maxTilesX - minTileX;
+			if( Main.maxTilesX < 64 || maxTileX <= minTileX ) {
+				minTileX = 0;
+				maxTileX = Main.maxTilesX;
+			}
+
+			int minTileY = (int)Main.worldSurface;
+			int maxTileY = Main.maxTilesY - 220;
+			if( Main.maxTilesY <= 220 || maxTileY <= minTileY ) {
+				minTileY = 0;
+				maxTileY = Main.maxTilesY;
+			}
+
+			return (minTileX, maxTileX, minTileY, maxTileY);
+		}
+
+
+
+		////////////////
+
 		private TilePattern MirrorSpacePattern;
 		private int NeededMirrors;
 
@@ -44,9 +66,13 @@ namespace MountedMagicMirrors {
 				progress.Message = "Pre-placing Mounted Magic Mirrors: %";
 			}
 
-			for( int i = 0; i < this.NeededMirrors; i++ ) {
-				progress?.Set( stepWeight * (float)i );
+			int minTileDist = MMMConfig.Instance.MinimumMirrorTileSpacing;
+			if( Main.maxTilesX <= (minTileDist + 4) || Main.maxTilesY <= (minTileDist + 4) ) {
+				LogHelpers.Warn( "Invalid world size." );
+				return;
+			}
 
+			for( int i = 0; i < this.NeededMirrors; i++ ) {
 				if( !this.GetRandomOpenMirrorableCenterTile(out randCenterTile, 1000) ) {
 					break;
 				}
@@ -54,6 +80,8 @@ namespace MountedMagicMirrors {
 				this.MirrorPositions.Set2D( randCenterTile.TileX, randCenterTile.TileY );
 
 				this.SpawnMirror( randCenterTile.TileX, randCenterTile.TileY );
+
+				progress?.Set( stepWeight * (float)(i+1) );
 			}
 		}
 
@@ -78,12 +106,13 @@ namespace MountedMagicMirrors {
 		private (int TileX, int TileY) GetRandomMirrorableCenterTile( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
+			var bounds = MountedMirrorsGenPass.GetTileBoundsForWorld();
 
 			do {
 				WorldGen.genRand.Next();	// Desyncs this from Wormholes?
 				WorldGen.genRand.Next();
-				randTileX = WorldGen.genRand.Next( 64, Main.maxTilesX - 64 );
-				randTileY = WorldGen.genRand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
+				randTileX = WorldGen.genRand.Next( bounds.minTileX, bounds.maxTileX );
+				randTileY = WorldGen.genRand.Next( bounds.minTileY, bounds.maxTileY );
 
 				if( this.MirrorSpacePattern.Check( randTileX, randTileY ) ) {
 					break;

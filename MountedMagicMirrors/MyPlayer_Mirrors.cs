@@ -9,6 +9,7 @@ using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.Players;
 using HamstarHelpers.Helpers.Tiles;
 using MountedMagicMirrors.Tiles;
+using MountedMagicMirrors.DataStructures;
 
 
 namespace MountedMagicMirrors {
@@ -48,6 +49,14 @@ namespace MountedMagicMirrors {
 				}
 			}
 		}
+
+		////
+
+		internal void SetDiscoveredMirrorsFromNetwork( IDictionary<string, DiscoveredMirrors> mirrors ) {
+			this.DiscoveredMirrorTilesPerWorld = mirrors;
+		}
+
+		////
 
 		public void ClearInvalidMirrorDiscoveries() {
 			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {

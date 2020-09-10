@@ -1,12 +1,12 @@
-﻿using HamstarHelpers.Services.Configs;
-using System;
+﻿using System;
 using System.ComponentModel;
+using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
 
 namespace MountedMagicMirrors {
-	public class MMMConfig : StackableModConfig {
-		public static MMMConfig Instance => ModConfigStack.GetMergedConfigs<MMMConfig>();
+	public class MMMConfig : ModConfig {
+		public static MMMConfig Instance => ModContent.GetInstance<MMMConfig>();
 
 
 

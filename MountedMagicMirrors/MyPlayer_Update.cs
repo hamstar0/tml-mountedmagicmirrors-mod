@@ -21,9 +21,11 @@ namespace MountedMagicMirrors {
 				if( !this.ClickSafetyLock ) {
 					if( this.TargetMirror.HasValue ) {
 						(int TileX, int TileY) target = this.TargetMirror.Value;
-
+						
 						if( this.CurrentWorldDiscoveredMirrorTiles?.Contains2D(target.TileX, target.TileY) ?? false ) {
-							if ( isRightClick && MMMConfig.Instance.RightClickToUndiscover ) {
+							var config = MMMConfig.Instance;
+
+							if( isRightClick && config.Get<bool>( nameof(MMMConfig.RightClickToUndiscover) ) ) {
 								Main.NewText( "Mirror removed.", Color.Yellow );
 								this.CurrentWorldDiscoveredMirrorTiles.Remove2D(target.TileX, target.TileY);
 							} else {

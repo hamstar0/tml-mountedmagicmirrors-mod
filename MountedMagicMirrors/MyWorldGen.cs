@@ -66,7 +66,7 @@ namespace MountedMagicMirrors {
 				progress.Message = "Pre-placing Mounted Magic Mirrors: %";
 			}
 
-			int minTileDist = MMMConfig.Instance.MinimumMirrorTileSpacing;
+			int minTileDist = MMMConfig.Instance.Get<int>( nameof(MMMConfig.MinimumMirrorTileSpacing) );
 			if( Main.maxTilesX <= (minTileDist + 4) || Main.maxTilesY <= (minTileDist + 4) ) {
 				LogHelpers.Warn( "Invalid world size." );
 				return;
@@ -124,7 +124,7 @@ namespace MountedMagicMirrors {
 
 
 		private bool HasNearbyMirrors( int tileX, int tileY ) {
-			int minTileDist = MMMConfig.Instance.MinimumMirrorTileSpacing;
+			int minTileDist = MMMConfig.Instance.Get<int>( nameof(MMMConfig.MinimumMirrorTileSpacing) );
 			int minTileDistSqt = minTileDist * minTileDist;
 
 			foreach( (int otherTileX, ISet<int> otherTileYs) in this.MirrorPositions ) {

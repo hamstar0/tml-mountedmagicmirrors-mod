@@ -1,11 +1,11 @@
-﻿using HamstarHelpers.Helpers.TModLoader;
-using Microsoft.Xna.Framework;
-using MountedMagicMirrors.Items;
+﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using HamstarHelpers.Helpers.TModLoader;
+using MountedMagicMirrors.Items;
 
 
 namespace MountedMagicMirrors.Tiles {
@@ -56,11 +56,11 @@ namespace MountedMagicMirrors.Tiles {
 		////////////////
 
 		public override bool CanKillTile( int i, int j, ref bool blockDamaged ) {
-			return MMMConfig.Instance.IsMountedMagicMirrorBreakable;
+			return MMMConfig.Instance.Get<bool>( nameof( MMMConfig.IsMountedMagicMirrorBreakable) );
 		}
 
 		public override void KillTile( int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem ) {
-			if( !MMMConfig.Instance.IsMountedMagicMirrorBreakable ) {
+			if( !MMMConfig.Instance.Get<bool>( nameof(MMMConfig.IsMountedMagicMirrorBreakable) ) ) {
 				fail = true;
 				effectOnly = false;
 				noItem = true;
@@ -68,7 +68,9 @@ namespace MountedMagicMirrors.Tiles {
 		}
 
 		public override void KillMultiTile( int i, int j, int frameX, int frameY ) {
-			if( !MMMConfig.Instance.IsMountedMagicMirrorBreakable ) {
+			var config = MMMConfig.Instance;
+
+			if( !config.Get<bool>( nameof(MMMConfig.IsMountedMagicMirrorBreakable) ) ) {
 				for( int k=i; k<i+3; k++ ) {
 					for( int l=j; l<j+3; l++ ) {
 						if( Main.tile[k, l].wall <= 0 ) {
@@ -77,7 +79,7 @@ namespace MountedMagicMirrors.Tiles {
 					}
 				}
 			} else {
-				if( MMMConfig.Instance.MountedMagicMirrorDropsItem ) {
+				if( config.Get<bool>( nameof(MMMConfig.MountedMagicMirrorDropsItem) ) ) {
 					Item.NewItem( i * 16, j * 16, 64, 32, ModContent.ItemType<MountableMagicMirrorTileItem>() );
 				}
 			}

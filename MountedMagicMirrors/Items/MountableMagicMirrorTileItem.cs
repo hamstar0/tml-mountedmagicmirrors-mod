@@ -1,7 +1,7 @@
-using MountedMagicMirrors.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using MountedMagicMirrors.Tiles;
 
 
 namespace MountedMagicMirrors.Items {
@@ -57,7 +57,7 @@ namespace MountedMagicMirrors.Items {
 			this.AddRecipeGroup( mymod.MagicMirrorsRecipeGroupName, 1 );
 			this.AddIngredient( ItemID.Wire, 50 );
 
-			if( MMMConfig.Instance.EnableMountedMagicMirrorEasyModeRecipe ) {
+			if( MMMConfig.Instance.Get<bool>( nameof(MMMConfig.EnableMountedMagicMirrorEasyModeRecipe) ) ) {
 				this.AddIngredient( ItemID.LargeRuby, 1 );
 			} else {
 				this.AddIngredient( ItemID.Teleporter, 1 );
@@ -69,7 +69,7 @@ namespace MountedMagicMirrors.Items {
 
 
 		public override bool RecipeAvailable() {
-			return MMMConfig.Instance.EnableMountedMagicMirrorRecipe;
+			return MMMConfig.Instance.Get<bool>( nameof(MMMConfig.EnableMountedMagicMirrorRecipe) );
 		}
 	}
 }

@@ -5,7 +5,7 @@ using Terraria.ModLoader.Config;
 
 
 namespace MountedMagicMirrors {
-	public class MMMConfig : ModConfig {
+	public partial class MMMConfig : ModConfig {
 		public static MMMConfig Instance => ModContent.GetInstance<MMMConfig>();
 
 

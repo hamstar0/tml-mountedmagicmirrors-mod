@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -41,18 +42,16 @@ namespace MountedMagicMirrors {
 				yield break;
 			}
 
-			lock( MMMPlayer.MyCurrentMirrorsLock ) {
-				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
-					foreach( int tileY in tileYs.ToArray() ) {
-						yield return (tileX, tileY);
-					}
+			foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
+				foreach( int tileY in tileYs.ToArray() ) {
+					yield return (tileX, tileY);
 				}
 			}
 		}
 
 		////
 
-		internal void SetDiscoveredMirrorsFromNetwork( IDictionary<string, DiscoveredMirrors> mirrors ) {
+		internal void SetDiscoveredMirrorsFromNetwork( ConcurrentDictionary<string, DiscoveredMirrors> mirrors ) {
 			this.DiscoveredMirrorTilesPerWorld = mirrors;
 		}
 
@@ -65,18 +64,16 @@ namespace MountedMagicMirrors {
 
 			IList<(int x, int y)> removals = new List<(int, int)>();
 
-			lock( MMMPlayer.MyCurrentMirrorsLock ) {
-				foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
-					foreach( int tileY in tileYs.ToArray() ) {
-						if( MMMPlayer.IsMirrorTileInvalid(tileX, tileY) == true ) {
-							removals.Add( (tileX, tileY) );
-						}
+			foreach( (int tileX, ISet<int> tileYs) in this.CurrentWorldDiscoveredMirrorTiles.ToArray() ) {
+				foreach( int tileY in tileYs.ToArray() ) {
+					if( MMMPlayer.IsMirrorTileInvalid(tileX, tileY) == true ) {
+						removals.Add( (tileX, tileY) );
 					}
 				}
+			}
 
-				foreach( (int tileX, int tileY) in removals ) {
-					this.CurrentWorldDiscoveredMirrorTiles.Remove2D( tileX, tileY );
-				}
+			foreach( (int tileX, int tileY) in removals ) {
+				this.CurrentWorldDiscoveredMirrorTiles.Remove2D( tileX, tileY );
 			}
 		}
 
@@ -88,7 +85,14 @@ namespace MountedMagicMirrors {
 			this.GetDiscoveredMirrors();    // Unremember non-existent mirrors
 
 			(int TileX, int TileY) mirrorTile;
-			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare( mymod.MMMTilePattern, mouseTileX, mouseTileY, 3, out mirrorTile );
+			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare(
+				pattern: mymod.MMMTilePattern,
+				tileX: mouseTileX,
+				tileY: mouseTileY,
+				maxDistance: 3,
+				coords: out mirrorTile
+			);
+
 			if( !foundTile ) {
 				if( MMMConfig.Instance.DebugModeInfo ) {
 					LogHelpers.LogAndPrintOnce( "A - No mirror at " + mouseTileX + "," + mouseTileY );
@@ -99,12 +103,9 @@ namespace MountedMagicMirrors {
 			if( this.CurrentWorldDiscoveredMirrorTiles?.Contains2D(mirrorTile.TileX, mirrorTile.TileY) ?? true ) {
 				return false;
 			}
+			this.CurrentWorldDiscoveredMirrorTiles.Set2D( mirrorTile.TileX, mirrorTile.TileY );
 
-			lock( MMMPlayer.MyCurrentMirrorsLock ) {
-				this.CurrentWorldDiscoveredMirrorTiles.Set2D( mirrorTile.TileX, mirrorTile.TileY );
-
-				return true;
-			}
+			return true;
 		}
 
 

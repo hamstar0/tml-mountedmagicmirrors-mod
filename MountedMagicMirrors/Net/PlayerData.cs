@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Terraria;
 using HamstarHelpers.Services.Network.NetIO;
 using HamstarHelpers.Services.Network.NetIO.PayloadTypes;
@@ -8,19 +9,19 @@ using MountedMagicMirrors.DataStructures;
 
 
 namespace MountedMagicMirrors.Net {
-	class PlayerDataProtocol : NetIOBidirectionalPayload {
-		public static void SendToServer( IDictionary<string, DiscoveredMirrors> mirrors ) {
+	class PlayerDataProtocol : NetIOBroadcastPayload {
+		public static void Broadcast( IDictionary<string, DiscoveredMirrors> mirrors ) {
 			var protocol = new PlayerDataProtocol( Main.myPlayer, mirrors );
-			NetIO.SendToServer( protocol );
+			NetIO.Broadcast( protocol );
 		}
 
-		public static void SendToClients(
+		/*public static void SendToClients(
 					int toWho,
 					int fromWho,
 					IDictionary<string, DiscoveredMirrors> mirrors ) {
 			var protocol = new PlayerDataProtocol( fromWho, mirrors );
 			NetIO.SendToClients( protocol, toWho, fromWho );
-		}
+		}*/
 
 
 
@@ -49,11 +50,13 @@ namespace MountedMagicMirrors.Net {
 
 		////////////////
 
-		public override void ReceiveOnClient() {
+		public override bool ReceiveOnServerBeforeRebroadcast( int fromWho ) {
 			this.Receive();
+			return true;
 		}
 
-		public override void ReceiveOnServer( int fromWho ) {
+		public override void ReceiveBroadcastOnClient() {
+			this.Receive();
 		}
 
 		////
@@ -69,8 +72,9 @@ namespace MountedMagicMirrors.Net {
 					kv2 => kv2.Value as ISet<int>
 				) )
 			);
+			var concurMirrors = new ConcurrentDictionary<string, DiscoveredMirrors>( mirrors );
 
-			myplayer.SetDiscoveredMirrorsFromNetwork( mirrors );
+			myplayer.SetDiscoveredMirrorsFromNetwork( concurMirrors );
 		}
 	}
 }

@@ -85,6 +85,10 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public override void SendClientChanges( ModPlayer clientPlayer ) {
+			if( clientPlayer.player.whoAmI != Main.myPlayer ) {
+				return;
+			}
+
 			var myclone = (MMMPlayer)clientPlayer;
 			var thisDict = this.DiscoveredMirrorTilesPerWorld;
 			var thatDict = myclone.DiscoveredMirrorTilesPerWorld;

@@ -9,6 +9,7 @@ using MountedMagicMirrors.DataStructures;
 
 
 namespace MountedMagicMirrors.Net {
+	[Serializable]
 	class PlayerDataProtocol : NetIOBroadcastPayload {
 		public static void Broadcast( IDictionary<string, DiscoveredMirrors> mirrors ) {
 			var protocol = new PlayerDataProtocol( Main.myPlayer, mirrors );

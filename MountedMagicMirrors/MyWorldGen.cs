@@ -60,7 +60,6 @@ namespace MountedMagicMirrors {
 
 		public override void Apply( GenerationProgress progress ) {
 			(int TileX, int TileY) randCenterTile;
-			float stepWeight = 1f / (float)this.NeededMirrors;
 
 			if( progress != null ) {
 				progress.Message = "Pre-placing Mounted Magic Mirrors: %";
@@ -81,7 +80,7 @@ namespace MountedMagicMirrors {
 
 				this.SpawnMirror( randCenterTile.TileX, randCenterTile.TileY );
 
-				progress?.Set( stepWeight * (float)(i+1) );
+				progress?.Set( (float)i / (float)this.NeededMirrors );
 			}
 		}
 

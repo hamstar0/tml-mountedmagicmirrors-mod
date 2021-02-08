@@ -51,8 +51,8 @@ namespace MountedMagicMirrors {
 
 
 		[Range( 0, 10000 )]
-		[DefaultValue( 64 )]
-		public int MinimumMirrorTileSpacing { get; set; } = 64;
+		[DefaultValue( 128 )]
+		public int MinimumMirrorTileSpacing { get; set; } = 128;
 
 
 		[Range( 0, 1000 )]

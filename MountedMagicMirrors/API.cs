@@ -17,7 +17,7 @@ namespace MountedMagicMirrors {
 			IEnumerable<(int, int)> tiles = myplayer.CurrentWorldDiscoveredMirrorTiles?.SelectMany(
 				kv => kv.Value.Select( y => (kv.Key, y) )
 			);
-			return tiles.ToList();
+			return tiles?.ToList() ?? new List<(int, int)>();
 		}
 	}
 }

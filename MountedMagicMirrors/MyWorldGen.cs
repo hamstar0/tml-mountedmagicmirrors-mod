@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
 using HamstarHelpers.Classes.Tiles.TilePattern;
@@ -51,6 +52,21 @@ namespace MountedMagicMirrors {
 				HasSolidProperties = false,
 				IsPlatform = false,
 				IsActuated = false,
+				IsNotAnyOfWallType = new HashSet<int> {
+					WallID.SpiderUnsafe,
+					WallID.HiveUnsafe,
+					WallID.CorruptionUnsafe1,
+					WallID.CorruptionUnsafe2,
+					WallID.CorruptionUnsafe3,
+					WallID.CorruptionUnsafe4,
+					WallID.CorruptGrassUnsafe,
+					WallID.CrimsonUnsafe1,
+					WallID.CrimsonUnsafe2,
+					WallID.CrimsonUnsafe3,
+					WallID.CrimsonUnsafe4,
+					WallID.CrimstoneUnsafe,
+					WallID.CrimsonGrassUnsafe,
+				}
 			} );
 			this.NeededMirrors = mirrors;
 		}

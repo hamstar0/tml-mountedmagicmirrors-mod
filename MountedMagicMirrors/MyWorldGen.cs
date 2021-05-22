@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
+using HamstarHelpers.Classes.Errors;
 using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
@@ -75,8 +76,6 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public override void Apply( GenerationProgress progress ) {
-			(int TileX, int TileY) randCenterTile;
-
 			if( progress != null ) {
 				progress.Message = "Pre-placing Mounted Magic Mirrors: %";
 			}
@@ -87,54 +86,72 @@ namespace MountedMagicMirrors {
 				return;
 			}
 
-			for( int i = 0; i < this.NeededMirrors; i++ ) {
-				if( !this.GetRandomOpenMirrorableCenterTile(out randCenterTile, 1000) ) {
-					break;
+			for( int i = 0; i < 1000; i++ ) {
+				WorldGen.genRand.Next();    // Desyncs this from Wormholes?
+			}
+
+			(int TileX, int TileY)? myRandCenterTile;
+			(int TileX, int TileY) randCenterTile;
+
+			try {
+				for( int i = 0; i < this.NeededMirrors; i++ ) {
+					myRandCenterTile = this.GetRandomOpenMirrorableCenterTile( 1000 );
+					if( !myRandCenterTile.HasValue ) {
+						break;
+					}
+
+					randCenterTile = myRandCenterTile.Value;
+
+					this.MirrorPositions.Set2D( randCenterTile.TileX, randCenterTile.TileY );
+
+					this.SpawnMirror( randCenterTile.TileX, randCenterTile.TileY );
+
+					progress?.Set( (float)i / (float)this.NeededMirrors );
 				}
-
-				this.MirrorPositions.Set2D( randCenterTile.TileX, randCenterTile.TileY );
-
-				this.SpawnMirror( randCenterTile.TileX, randCenterTile.TileY );
-
-				progress?.Set( (float)i / (float)this.NeededMirrors );
+			} catch( Exception e ) {
+				throw new ModHelpersException( "Mounted Mirrors world gen failed.", e );
 			}
 		}
 
 
 		////////////////
 
-		private bool GetRandomOpenMirrorableCenterTile( out (int TileX, int TileY) randTileCenter, int maxAttempts ) {
+		private (int TileX, int TileY)? GetRandomOpenMirrorableCenterTile( int maxAttempts ) {
+			(int TileX, int TileY)? myRandTileCenter = null;
 			int attempts = 0;
 
 			do {
-				randTileCenter = this.GetRandomMirrorableCenterTile( maxAttempts );
+				myRandTileCenter = this.GetRandomMirrorableCenterTile( maxAttempts );
+				if( !myRandTileCenter.HasValue ) {
+					break;
+				}
 
-				if( !this.HasNearbyMirrors(randTileCenter.TileX, randTileCenter.TileY) ) {
-					return true;
+				if( !this.HasNearbyMirrors(myRandTileCenter.Value.TileX, myRandTileCenter.Value.TileY) ) {
+					return myRandTileCenter;
 				}
 			} while( attempts++ < maxAttempts );
 
-			return false;
+			return null;
 		}
 
 
-		private (int TileX, int TileY) GetRandomMirrorableCenterTile( int maxAttempts ) {
+		////////////////
+
+		private (int TileX, int TileY)? GetRandomMirrorableCenterTile( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
 			var bounds = MountedMirrorsGenPass.GetTileBoundsForWorld();
 
 			do {
-				WorldGen.genRand.Next();	// Desyncs this from Wormholes?
-				WorldGen.genRand.Next();
 				randTileX = WorldGen.genRand.Next( bounds.minTileX, bounds.maxTileX );
 				randTileY = WorldGen.genRand.Next( bounds.minTileY, bounds.maxTileY );
 
 				if( this.MirrorSpacePattern.Check( randTileX, randTileY ) ) {
-					break;
+					return (randTileX, randTileY);
 				}
 			} while( attempts++ < maxAttempts );
 
-			return (randTileX, randTileY);
+			return null;
 		}
 
 

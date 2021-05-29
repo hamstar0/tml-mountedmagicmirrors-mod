@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using HamstarHelpers.Helpers.TModLoader;
+using ModLibsCore.Libraries.TModLoader;
 using MountedMagicMirrors.Items;
 
 
@@ -92,7 +92,7 @@ namespace MountedMagicMirrors.Tiles {
 			Main.LocalPlayer.showItemIcon = true;
 			Main.LocalPlayer.showItemIcon2 = ModContent.ItemType<MountableMagicMirrorTileItem>();
 
-			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
+			var myplayer = TmlLibraries.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 			if( myplayer.AddDiscoveredMirror( i, j ) ) {
 				Main.NewText( "Mirror located!", Color.Lime );
 			}
@@ -105,7 +105,7 @@ namespace MountedMagicMirrors.Tiles {
 			Main.mapEnabled = true;
 			Main.mapFullscreen = true;
 
-			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
+			var myplayer = TmlLibraries.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 			myplayer.BeginMapMirrorPicking();
 
 			return true;

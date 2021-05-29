@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.World;
+using ModLibsCore.Libraries.Debug;
+using ModLibsGeneral.Libraries.World;
 
 
 namespace MountedMagicMirrors {
@@ -18,7 +18,7 @@ namespace MountedMagicMirrors {
 
 			int mirrors;
 
-			switch( WorldHelpers.GetSize() ) {
+			switch( WorldLibraries.GetSize() ) {
 			default:
 			case WorldSize.SubSmall:
 				mirrors = config.Get<int>( nameof(MMMConfig.TinyWorldMirrors) );

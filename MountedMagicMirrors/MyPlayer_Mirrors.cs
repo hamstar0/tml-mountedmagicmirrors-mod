@@ -5,10 +5,10 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.DotNET.Extensions;
-using HamstarHelpers.Helpers.Players;
-using HamstarHelpers.Helpers.Tiles;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.DotNET.Extensions;
+using ModLibsGeneral.Libraries.Players;
+using ModLibsTiles.Libraries.Tiles;
 using MountedMagicMirrors.Tiles;
 using MountedMagicMirrors.DataStructures;
 
@@ -22,9 +22,9 @@ namespace MountedMagicMirrors {
 					return null;
 				}
 
-				/*if( !TileChunkHelpers.IsTileSyncedForCurrentClient( tileX, tileY ) ) {
+				/*if( !TileChunkLibraries.IsTileSyncedForCurrentClient( tileX, tileY ) ) {
 					Tile tile = Main.tile[tileX, tileY];
-					if( tile == null || TileHelpers.IsEqual(tile, new Tile()) ) {
+					if( tile == null || TileLibraries.IsEqual(tile, new Tile()) ) {
 						return null;
 					}
 				}*/
@@ -85,7 +85,7 @@ namespace MountedMagicMirrors {
 			this.GetDiscoveredMirrors();    // Unremember non-existent mirrors
 
 			(int TileX, int TileY) mirrorTile;
-			bool foundTile = TileFinderHelpers.FindTopLeftOfSquare(
+			bool foundTile = TileFinderLibraries.FindTopLeftOfSquare(
 				pattern: mymod.MMMTilePattern,
 				tileX: mouseTileX,
 				tileY: mouseTileY,
@@ -95,7 +95,7 @@ namespace MountedMagicMirrors {
 
 			if( !foundTile ) {
 				if( MMMConfig.Instance.DebugModeInfo ) {
-					LogHelpers.LogAndPrintOnce( "A - No mirror at " + mouseTileX + "," + mouseTileY );
+					LogLibraries.LogAndPrintOnce( "A - No mirror at " + mouseTileX + "," + mouseTileY );
 				}
 				return false;
 			}
@@ -126,7 +126,7 @@ namespace MountedMagicMirrors {
 			}
 
 			var pos = new Vector2( (tileX << 4), (tileY << 4) );
-			PlayerWarpHelpers.Teleport( this.player, pos, PlayerWarpHelpers.MagicMirrorWarpStyle );
+			PlayerWarpLibraries.Teleport( this.player, pos, PlayerWarpLibraries.MagicMirrorWarpStyle );
 
 			return true;
 		}

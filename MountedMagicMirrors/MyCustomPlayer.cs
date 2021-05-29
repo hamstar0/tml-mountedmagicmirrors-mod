@@ -1,8 +1,8 @@
 ﻿using System;
 using Terraria;
 using Terraria.ID;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Classes.PlayerData;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Classes.PlayerData;
 
 
 namespace MountedMagicMirrors {

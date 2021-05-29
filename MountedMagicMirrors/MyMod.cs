@@ -6,11 +6,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using HamstarHelpers.Classes.Tiles.TilePattern;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.TModLoader.Mods;
-using HamstarHelpers.Services.Hooks.LoadHooks;
-using HamstarHelpers.Services.Network;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.TModLoader.Mods;
+using ModLibsCore.Services.Hooks.LoadHooks;
+using ModLibsNet.Services.Network;
+using ModLibsTiles.Classes.Tiles.TilePattern;
 using MountedMagicMirrors.Tiles;
 
 
@@ -69,7 +69,7 @@ namespace MountedMagicMirrors {
 
 			//
 
-			Client.SubscribeToTileSectionPackets( onTileSectionPacketGet );
+			TileSectionData.SubscribeToTileSectionPackets( onTileSectionPacketGet );
 
 			LoadHooks.AddPostWorldUnloadEachHook( () => {
 				var myworld = ModContent.GetInstance<MMMWorld>();
@@ -99,7 +99,7 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public override object Call( params object[] args ) {
-			return ModBoilerplateHelpers.HandleModCall( typeof(MountedMagicMirrorsAPI), args );
+			return ModBoilerplateLibraries.HandleModCall( typeof(MountedMagicMirrorsAPI), args );
 		}
 	}
 }

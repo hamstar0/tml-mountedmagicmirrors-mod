@@ -1,6 +1,6 @@
 displayName = Mounted Magic Mirrors
 author = hamstar
-version = 1.1.9.1
-modReferences = HamstarHelpers@5.9.4
+version = 1.2.0
+modReferences = ModLibsCore@1.0.0, ModLibsGeneral@1.0.0, ModLibsNet@1.0.0, ModLibsTiles@1.0.0
 buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
 homepage = https://forums.terraria.org/index.php?threads/mounted-magic-mirrors-fast-travel.83296/

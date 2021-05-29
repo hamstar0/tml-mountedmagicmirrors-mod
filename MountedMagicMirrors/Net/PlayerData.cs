@@ -3,17 +3,17 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Terraria;
-using HamstarHelpers.Services.Network.NetIO;
-using HamstarHelpers.Services.Network.NetIO.PayloadTypes;
+using ModLibsCore.Services.Network.SimplePacket;
 using MountedMagicMirrors.DataStructures;
 
 
 namespace MountedMagicMirrors.Net {
 	[Serializable]
-	class PlayerDataProtocol : NetIOBroadcastPayload {
+	class PlayerDataProtocol : SimplePacketPayload {
 		public static void Broadcast( IDictionary<string, DiscoveredMirrors> mirrors ) {
-			var protocol = new PlayerDataProtocol( Main.myPlayer, mirrors );
-			NetIO.Broadcast( protocol );
+			var payload = new PlayerDataProtocol( Main.myPlayer, mirrors );
+
+			SimplePacket.SendToServer( payload );
 		}
 
 		/*public static void SendToClients(
@@ -51,16 +51,18 @@ namespace MountedMagicMirrors.Net {
 
 		////////////////
 
-		public override bool ReceiveOnServerBeforeRebroadcast( int fromWho ) {
+		public override void ReceiveOnServer( int fromWho ) {
 			this.Receive();
-			return true;
+
+			SimplePacket.SendToClient( this, -1, fromWho );
 		}
 
-		public override void ReceiveBroadcastOnClient() {
+		public override void ReceiveOnClient() {
 			this.Receive();
 		}
 
-		////
+
+		////////////////
 
 		private void Receive() {
 			Player plr = Main.player[this.PlayerWho];

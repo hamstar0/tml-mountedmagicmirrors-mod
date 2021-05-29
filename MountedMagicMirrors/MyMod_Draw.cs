@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.TModLoader;
-using HamstarHelpers.Helpers.HUD;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.TModLoader;
+using ModLibsGeneral.Libraries.HUD;
 
 
 namespace MountedMagicMirrors {
@@ -19,7 +19,7 @@ namespace MountedMagicMirrors {
 		////////////////
 
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
-			var myplayer = TmlHelpers.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
+			var myplayer = TmlLibraries.SafelyGetModPlayer<MMMPlayer>( Main.LocalPlayer );
 			if( !myplayer.IsMapMirrorPicking ) {
 				return;
 			}
@@ -34,7 +34,7 @@ namespace MountedMagicMirrors {
 			mouseY = (Main.screenHeight / 2) + mouseY;
 
 			(int x, int y) mouseTile;
-			HUDMapHelpers.GetFullscreenMapTileOfScreenPosition( mouseX, mouseY, out mouseTile );
+			HUDMapLibraries.GetFullscreenMapTileOfScreenPosition( mouseX, mouseY, out mouseTile );
 
 			int closestTileDistSqr = maxDistSqr;
 			(int x, int y) closestTilePos = (0, 0);
@@ -79,7 +79,7 @@ namespace MountedMagicMirrors {
 			int wldBaseY = ((tileY + 1) << 4) + 8;
 			var wldPos = new Vector2(wldBaseX, wldBaseY);
 
-			var overMapData = HUDMapHelpers.GetFullMapPositionAsScreenPosition( wldPos );
+			var overMapData = HUDMapLibraries.GetFullMapPositionAsScreenPosition( wldPos );
 
 			if( overMapData.IsOnScreen ) {
 				Vector2 scrPos = overMapData.ScreenPosition;

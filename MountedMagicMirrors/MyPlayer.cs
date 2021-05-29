@@ -5,10 +5,10 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.DotNET.Extensions;
-using HamstarHelpers.Helpers.World;
-using HamstarHelpers.Helpers.TModLoader;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.DotNET.Extensions;
+using ModLibsCore.Libraries.TModLoader;
+using ModLibsCore.Libraries.World;
 using MountedMagicMirrors.Net;
 using MountedMagicMirrors.DataStructures;
 
@@ -25,7 +25,7 @@ namespace MountedMagicMirrors {
 		public DiscoveredMirrors CurrentWorldDiscoveredMirrorTiles {
 			get {
 				if( this._CurrentWorldDiscoveredMirrorTiles == null ) {
-					string worldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
+					string worldUid = WorldIdentityLibraries.GetUniqueIdForCurrentWorld( true );
 
 					if( !this.DiscoveredMirrorTilesPerWorld.TryGetValue(worldUid, out this._CurrentWorldDiscoveredMirrorTiles) ) {
 						if( !this.DiscoveredMirrorTilesPerWorld.TryGetValue("_", out this._CurrentWorldDiscoveredMirrorTiles) ) {
@@ -119,7 +119,7 @@ namespace MountedMagicMirrors {
 				count = this.LoadNew( tag );
 			}
 
-			LogHelpers.Log( "Loaded "+count+" discovered mirrors for "+this.player.name+" ("+this.player.whoAmI+")" );
+			LogLibraries.Log( "Loaded "+count+" discovered mirrors for "+this.player.name+" ("+this.player.whoAmI+")" );
 		}
 
 		private int LoadOld( TagCompound tag ) {
@@ -134,7 +134,7 @@ namespace MountedMagicMirrors {
 				this.DiscoveredMirrorTilesPerWorld["_"].Set2D( tileX, tileY );
 				
 				if( MMMConfig.Instance.DebugModeInfo ) {
-					LogHelpers.Log( "(Old) Loaded mirror at " + tileX + ", " + tileY );
+					LogLibraries.Log( "(Old) Loaded mirror at " + tileX + ", " + tileY );
 				}
 			}
 
@@ -158,7 +158,7 @@ namespace MountedMagicMirrors {
 					this.DiscoveredMirrorTilesPerWorld[worldUid].Set2D( tileX, tileY );
 
 					if( MMMConfig.Instance.DebugModeInfo ) {
-						LogHelpers.Log( "Loaded mirror at " + tileX + ", " + tileY );
+						LogLibraries.Log( "Loaded mirror at " + tileX + ", " + tileY );
 					}
 				}
 
@@ -183,9 +183,9 @@ namespace MountedMagicMirrors {
 
 				string myWorldUid = worldUid;
 				if( worldUid == "_" ) {
-					myWorldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
+					myWorldUid = WorldIdentityLibraries.GetUniqueIdForCurrentWorld( true );
 					if( MMMConfig.Instance.DebugModeInfo ) {
-						LogHelpers.Log( "Saving for world UID " + myWorldUid );
+						LogLibraries.Log( "Saving for world UID " + myWorldUid );
 					}
 				}
 
@@ -201,7 +201,7 @@ namespace MountedMagicMirrors {
 					}
 				}
 
-				LogHelpers.Log( "Saved "
+				LogLibraries.Log( "Saved "
 					+j+" of "+count
 					+" discovered mirrors of world "
 					+myWorldUid+" ("+i+") for "
@@ -231,8 +231,8 @@ namespace MountedMagicMirrors {
 
 		private void PreUpdateLocal() {
 			if( this.CurrentWorldDiscoveredMirrorTiles == null ) {
-				if( LoadHelpers.IsWorldBeingPlayed() ) {
-					string currWorldUid = WorldHelpers.GetUniqueIdForCurrentWorld( true );
+				if( LoadLibraries.IsWorldBeingPlayed() ) {
+					string currWorldUid = WorldIdentityLibraries.GetUniqueIdForCurrentWorld( true );
 					this.DiscoveredMirrorTilesPerWorld[currWorldUid] = new DiscoveredMirrors();
 				}
 			}
@@ -240,7 +240,7 @@ namespace MountedMagicMirrors {
 			this.ClearInvalidMirrorDiscoveries();
 
 			if( MMMConfig.Instance.DebugModePosition ) {
-				DebugHelpers.Print( "WhereAmI", ( this.player.Center / 16 ).ToShortString() + " (" + this.player.Center.ToString() + ")" );
+				DebugLibraries.Print( "WhereAmI", ( this.player.Center / 16 ).ToShortString() + " (" + this.player.Center.ToString() + ")" );
 			}
 
 			if( this.IsMapMirrorPicking ) {

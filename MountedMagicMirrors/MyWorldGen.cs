@@ -5,10 +5,10 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
-using HamstarHelpers.Classes.Errors;
-using HamstarHelpers.Classes.Tiles.TilePattern;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.DotNET.Extensions;
+using ModLibsCore.Classes.Errors;
+using ModLibsTiles.Classes.Tiles.TilePattern;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.DotNET.Extensions;
 using MountedMagicMirrors.Tiles;
 
 
@@ -82,7 +82,7 @@ namespace MountedMagicMirrors {
 
 			int minTileDist = MMMConfig.Instance.Get<int>( nameof(MMMConfig.MinimumMirrorTileSpacing) );
 			if( Main.maxTilesX <= (minTileDist + 4) || Main.maxTilesY <= (minTileDist + 4) ) {
-				LogHelpers.Warn( "Invalid world size." );
+				LogLibraries.Warn( "Invalid world size." );
 				return;
 			}
 
@@ -109,7 +109,7 @@ namespace MountedMagicMirrors {
 					progress?.Set( (float)i / (float)this.NeededMirrors );
 				}
 			} catch( Exception e ) {
-				throw new ModHelpersException( "Mounted Mirrors world gen failed.", e );
+				throw new ModLibsException( "Mounted Mirrors world gen failed.", e );
 			}
 		}
 
@@ -189,7 +189,7 @@ namespace MountedMagicMirrors {
 			}
 
 			if( MMMConfig.Instance.DebugModeWorldGen ) {
-				LogHelpers.Log( "Placed mounted magic mirror (" + this.MirrorPositions.Count + " of " + this.NeededMirrors + ")" +
+				LogLibraries.Log( "Placed mounted magic mirror (" + this.MirrorPositions.Count + " of " + this.NeededMirrors + ")" +
 					" at " + centerTileX + "," + centerTileY +
 					" (" + ( centerTileX << 4 ) + "," + ( centerTileY << 4 ) + ")"
 				);

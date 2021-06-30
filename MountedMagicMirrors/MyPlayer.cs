@@ -9,7 +9,6 @@ using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.World;
 using HamstarHelpers.Helpers.TModLoader;
-using MountedMagicMirrors.Net;
 using MountedMagicMirrors.DataStructures;
 
 
@@ -49,59 +48,6 @@ namespace MountedMagicMirrors {
 
 		public override bool CloneNewInstances => false;
 
-
-
-		////////////////
-
-		internal void OnCurrentClientEnter() {
-			PlayerDataProtocol.Broadcast( this.DiscoveredMirrorTilesPerWorld );
-		}
-
-		/*public override void SyncPlayer( int toWho, int fromWho, bool newPlayer ) {
-			if( Main.netMode == 1 ) {
-				if( newPlayer ) {
-					//PlayerDataProtocol.SendToServer( this.DiscoveredMirrorTilesPerWorld );
-					PlayerDataProtocol.Broadcast( this.DiscoveredMirrorTilesPerWorld );
-				}
-			} else {
-				//PlayerDataProtocol.SendToClients( toWho, fromWho, this.DiscoveredMirrorTilesPerWorld );
-			}
-		}*/
-
-		public override void clientClone( ModPlayer clientClone ) {
-			var myclone = (MMMPlayer)clientClone;
-
-			myclone._CurrentWorldDiscoveredMirrorTiles = null;
-
-			foreach( (string worldUid, DiscoveredMirrors mirrors) in this.DiscoveredMirrorTilesPerWorld ) {
-				myclone.DiscoveredMirrorTilesPerWorld[worldUid] = new DiscoveredMirrors();
-
-				foreach( (int tileX, ISet<int> tileYs) in mirrors ) {
-					myclone.DiscoveredMirrorTilesPerWorld[worldUid][tileX] = new HashSet<int>( tileYs );
-				}
-			}
-		}
-
-		////////////////
-
-		public override void SendClientChanges( ModPlayer clientPlayer ) {
-			if( clientPlayer.player.whoAmI != Main.myPlayer ) {
-				return;
-			}
-
-			var myclone = (MMMPlayer)clientPlayer;
-			var thisDict = this.DiscoveredMirrorTilesPerWorld;
-			var thatDict = myclone.DiscoveredMirrorTilesPerWorld;
-
-			if( !DiscoveredMirrors.WorldMirrorsEquals(thisDict, thatDict) ) {
-				if( Main.netMode == NetmodeID.MultiplayerClient ) {
-					PlayerDataProtocol.Broadcast( this.DiscoveredMirrorTilesPerWorld );
-				}
-				else {
-					//PlayerDataProtocol.SendToClients( -1, -1, this.DiscoveredMirrorTilesPerWorld );
-				}
-			}
-		}
 
 
 		////////////////

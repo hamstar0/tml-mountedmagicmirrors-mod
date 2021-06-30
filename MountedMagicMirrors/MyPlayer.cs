@@ -9,7 +9,6 @@ using ModLibsCore.Libraries.Debug;
 using ModLibsCore.Libraries.DotNET.Extensions;
 using ModLibsCore.Libraries.TModLoader;
 using ModLibsCore.Libraries.World;
-using MountedMagicMirrors.Net;
 using MountedMagicMirrors.DataStructures;
 
 
@@ -53,95 +52,13 @@ namespace MountedMagicMirrors {
 
 		////////////////
 
-		internal void OnCurrentClientEnter() {
-			PlayerDataProtocol.Broadcast( this.DiscoveredMirrorTilesPerWorld );
-		}
+		public override void Load( TagCompound tag ) {
+			this.DiscoveredMirrorTilesPerWorld.Clear();
 
-		/*public override void SyncPlayer( int toWho, int fromWho, bool newPlayer ) {
-			if( Main.netMode == 1 ) {
-				if( newPlayer ) {
-					//PlayerDataProtocol.SendToServer( this.DiscoveredMirrorTilesPerWorld );
-					PlayerDataProtocol.Broadcast( this.DiscoveredMirrorTilesPerWorld );
-				}
-			} else {
-				//PlayerDataProtocol.SendToClients( toWho, fromWho, this.DiscoveredMirrorTilesPerWorld );
-			}
-		}*/
-
-		public override void clientClone( ModPlayer clientClone ) {
-			var myclone = (MMMPlayer)clientClone;
-
-			myclone._CurrentWorldDiscoveredMirrorTiles = null;
-
-			foreach( (string worldUid, DiscoveredMirrors mirrors) in this.DiscoveredMirrorTilesPerWorld ) {
-				myclone.DiscoveredMirrorTilesPerWorld[worldUid] = new DiscoveredMirrors();
-
-				foreach( (int tileX, ISet<int> tileYs) in mirrors ) {
-					myclone.DiscoveredMirrorTilesPerWorld[worldUid][tileX] = new HashSet<int>( tileYs );
-				}
-			}
-		}
-
-		////////////////
-
-		public override void SendClientChanges( ModPlayer clientPlayer ) {
-			if( clientPlayer.player.whoAmI != Main.myPlayer ) {
+			if( !tag.ContainsKey("world_count") ) {
 				return;
 			}
 
-			var myclone = (MMMPlayer)clientPlayer;
-			var thisDict = this.DiscoveredMirrorTilesPerWorld;
-			var thatDict = myclone.DiscoveredMirrorTilesPerWorld;
-
-			if( !DiscoveredMirrors.WorldMirrorsEquals(thisDict, thatDict) ) {
-				if( Main.netMode == NetmodeID.MultiplayerClient ) {
-					PlayerDataProtocol.Broadcast( this.DiscoveredMirrorTilesPerWorld );
-				}
-				else {
-					//PlayerDataProtocol.SendToClients( -1, -1, this.DiscoveredMirrorTilesPerWorld );
-				}
-			}
-		}
-
-
-		////////////////
-
-		public override void Load( TagCompound tag ) {
-			int count = 0;
-
-			if( !tag.ContainsKey("world_count") ) {
-				if( tag.ContainsKey( "discovery_count" ) ) {
-					this.DiscoveredMirrorTilesPerWorld.Clear();
-					count = this.LoadOld( tag );
-				}
-			} else {
-				this.DiscoveredMirrorTilesPerWorld.Clear();
-				count = this.LoadNew( tag );
-			}
-
-			LogLibraries.Log( "Loaded "+count+" discovered mirrors for "+this.player.name+" ("+this.player.whoAmI+")" );
-		}
-
-		private int LoadOld( TagCompound tag ) {
-			int count = tag.GetInt( "discovery_count" );
-
-			this.DiscoveredMirrorTilesPerWorld["_"] = new DiscoveredMirrors();
-
-			for( int i = 0; i < count; i++ ) {
-				int tileX = tag.GetInt( "discovery_x_" + i );
-				int tileY = tag.GetInt( "discovery_y_" + i );
-
-				this.DiscoveredMirrorTilesPerWorld["_"].Set2D( tileX, tileY );
-				
-				if( MMMConfig.Instance.DebugModeInfo ) {
-					LogLibraries.Log( "(Old) Loaded mirror at " + tileX + ", " + tileY );
-				}
-			}
-
-			return count;
-		}
-
-		private int LoadNew( TagCompound tag ) {
 			int worldCount = tag.GetInt( "world_count" );
 			int totalMirrorCount = 0;
 
@@ -165,7 +82,7 @@ namespace MountedMagicMirrors {
 				totalMirrorCount += mirrorCount;
 			}
 
-			return totalMirrorCount;
+			LogLibraries.Log( "Loaded "+totalMirrorCount+" discovered mirrors for "+this.player.name+" ("+this.player.whoAmI+")" );
 		}
 
 
@@ -184,6 +101,7 @@ namespace MountedMagicMirrors {
 				string myWorldUid = worldUid;
 				if( worldUid == "_" ) {
 					myWorldUid = WorldIdentityLibraries.GetUniqueIdForCurrentWorld( true );
+
 					if( MMMConfig.Instance.DebugModeInfo ) {
 						LogLibraries.Log( "Saving for world UID " + myWorldUid );
 					}

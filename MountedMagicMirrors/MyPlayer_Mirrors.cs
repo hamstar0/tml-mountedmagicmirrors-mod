@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -10,7 +9,6 @@ using ModLibsCore.Libraries.DotNET.Extensions;
 using ModLibsGeneral.Libraries.Players;
 using ModLibsTiles.Libraries.Tiles;
 using MountedMagicMirrors.Tiles;
-using MountedMagicMirrors.DataStructures;
 
 
 namespace MountedMagicMirrors {
@@ -47,12 +45,6 @@ namespace MountedMagicMirrors {
 					yield return (tileX, tileY);
 				}
 			}
-		}
-
-		////
-
-		internal void SetDiscoveredMirrorsFromNetwork( ConcurrentDictionary<string, DiscoveredMirrors> mirrors ) {
-			this.DiscoveredMirrorTilesPerWorld = mirrors;
 		}
 
 		////
